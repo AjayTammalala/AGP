@@ -1,0 +1,40 @@
+<div class="navbar">
+    <div class="item1">
+        
+        <img src="https://cdn-icons-png.flaticon.com/128/13705/13705349.png" height="45px" alt="MenuButton"  (click)="MenuLists()">
+        <h1>AGP</h1>
+    </div>
+
+    <div class="item2">
+         <div class="clock">
+            {{today | date: 'HH:mm:ss'}}
+        </div>
+        <img  *ngIf="profileImageUrl"[src]="profileImageUrl" alt="Profile Picture" height="40px" style="border-radius: 50%;">
+
+        <p>Welcome <br> {{userFirstName }} {{ userLastName}} </p>
+        
+        <img  alt="LogoutLogo" src=" https://cdn-icons-png.flaticon.com/128/11019/11019316.png " height="20px" (click)="gotologin()" >   
+        
+       
+
+    </div>
+
+</div>
+
+<div class="snavandrouter">
+    <div class="sideNavbar col-2" *ngIf="isSidebarVisible" >
+        <div>
+                <a routerLink="/home/dashboard">Dashboard</a> <br>
+                <a routerLink="/home/module">Module</a> <br>
+                <a routerLink="/home/module">Methods</a> <br>
+                <a routerLink="/home/profile">Profile</a> <br>
+                <a routerLink="/home/logout">Logout</a> <br>
+        </div>
+    </div>
+
+
+    <div class=" col-10" [ngClass]="isSidebarVisible ? 'content-with-sidebar' : 'content-full'">
+      <router-outlet></router-outlet>
+    </div>
+
+</div>

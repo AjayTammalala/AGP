@@ -1,0 +1,197 @@
+.filter-row {
+  margin-bottom: 10px;
+}
+
+.filter-row .dropdown {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-row select {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.action-bar .search-input {
+  width: 300px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.action-bar button#addbutton {
+  padding: 10px 20px;
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.action-bar button#addbutton:hover {
+  background-color: #0056b3;
+}
+
+.cardslist {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  height: 250px;
+}
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.c1 {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: white;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-radius: 5px;
+}
+
+.c11 {
+  padding: 10px;
+  max-width: 60%;
+  overflow: hidden;
+}
+
+.c12 {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.c2 {
+  padding: 10px;
+}
+
+.c2 p {
+  font-size: 14px;
+}
+
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  min-width: 400px;
+}
+
+.popupbtn button {
+  background-color: black;
+  width: 100%;
+  color: white;
+}
+
+.container {
+  width: 40vw;
+  margin: auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
+form input[type="text"],
+form input[type="checkbox"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+form input[type="checkbox"] {
+  width: auto;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
+button.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+button.secondary {
+  background-color: #f44336;
+  color: white;
+}
+
+button:hover.primary {
+  background-color: #0056b3;
+}
+
+button:hover.secondary {
+  background-color: #c0392b;
+}
+
+
+.norecords{
+  text-align: center;
+  color: red;
+  font-size: 18px;
+}
+
+.error{
+  color: red;
+  font-size: 16px;
+}
+

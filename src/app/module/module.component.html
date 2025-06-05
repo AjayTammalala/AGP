@@ -1,0 +1,97 @@
+<div class="row" *ngIf="navbar">
+  <div class="dropdown-left">
+    <label for="statusFilter">Filter Modules:</label>
+    <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onStatusChange($event)">
+      <option value="All">All</option>
+      <option value="Active">Active</option>
+      <option value="Inactive">Inactive</option>
+    </select>
+  </div>
+</div>
+ 
+<div class="row spaced-between" *ngIf="navbar">
+  <input
+    type="text"
+    placeholder="Search modules..."
+    [(ngModel)]="searchText"
+    (input)="filterModules()"
+    class="search-input"
+  />
+  <div class="addbuttonn">
+      <button class="add-button" (click)="addModule()">Add Module</button>
+  </div>
+</div>
+ 
+<div *ngIf="grid">
+  <div class="cardslist">
+    <div class="card" *ngFor="let m of filteredModules">
+      <div class="c1">
+        <div class="c11">{{ m.MOD_NAME }}</div>
+        <div class="c12">
+          <img (click)="popup(m)" src="https://res.cloudinary.com/dlq6spyxk/image/upload/v1747135367/output-onlinepngtools_qu79fc.png" alt="view" height="25px">
+          <img (click)="editModule(m)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387576/output-onlinepngtools_i6uyhd.png" alt="edit" height="25px">
+          <img (click)="deleteModule(m)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387963/966f969e-fa3f-4d9f-8e71-227b8c16c093.png" alt="delete" height="25px">
+        </div>
+      </div>
+      <div class="c2">
+        <p>Description:<br><span> <a href="">{{ m.MOD_DESC }}</a></span></p>
+      </div>
+      <div>
+        <button class="getmodule"  (click)="getMethods(m)">Get Methods</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<div *ngIf="filteredModules.length ===0 && grid" class="norecords">
+    No Records Found
+</div>
+ 
+<div class="popup" *ngIf="pop">
+  <div class="popup-content">
+    <h1 style="text-align: center;">Module Details</h1>
+    <p><strong>Module:</strong> {{ selectedModule.MOD_NAME }}</p>
+    <p><strong>Description:</strong><a [href]="">{{ selectedModule.MOD_DESC }} </a> </p>
+    <div class="popupbtn"><button (click)="closePopup()">Close</button></div>
+  </div>
+</div>
+ 
+<div class="container" *ngIf="!grid && (add || edit)">
+  <h3 *ngIf="add">Add Module</h3>
+  <h3 *ngIf="edit">Edit Module</h3>
+ 
+  <form [formGroup]="moduleForm">
+
+    <div class="project-dropdown" *ngIf="add">
+      <label for="projectSelect" >Select Project</label>
+      <select id="projectSelect" formControlName="MOD_P_ID" style="width: 100%; padding: 8px; border-radius: 5px;
+  border: 1px solid #ccc; box-sizing: border-box;">
+        <option *ngFor="let project of activeProjects" [value]="project.P_ID">
+          {{ project.P_PRJ_NAME }} 
+        </option>
+      </select>
+    </div>
+    <label>Module Name</label>
+    <input type="text" formControlName="MOD_NAME" />
+    <div *ngIf="moduleForm.get('MOD_NAME')?.invalid && moduleForm.get('MOD_NAME')?.touched" class="error">
+        *Module Name is Required
+    </div>
+ 
+    <label>Description</label>
+    <input type="text" formControlName="MOD_DESC" />
+    <div *ngIf="moduleForm.get('MOD_DESC')?.invalid && moduleForm.get('MOD_DESC')?.touched" class="error">
+        *Description is Required
+    </div>
+ 
+    <label>Active</label>
+    <input type="checkbox" formControlName="MOD_ACTIVE" />
+ 
+    <button *ngIf="add" type="button"  class="add-button"   (click)="insertModule()">Add Module</button>
+    <button *ngIf="edit" type="button"  class="add-button" (click)="updateModule()">Update Module</button>
+    <button type="button" class="secondary" (click)="moduleForm.reset()">Reset</button>
+    <button type="button"  class="secondary" (click)="cancel()">Cancel</button>
+   
+  </form>
+</div>
+ 
+ 
