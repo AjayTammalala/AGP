@@ -1,59 +1,104 @@
-# AGP
+logins 
+email:"pavanp@spyhre.com"
+password : "Agp@2024!!"
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+if succesfull ....response from api  = 199 
 
-## Development server
+API --"http://spyhreagpapi.local.com/Service.svc"
+3 screens Project--modules--methods
+1.project screen get data and binding in cards -- some are Active 'Y' Inactive 'N' Deleted 'D'  shows in action : 'Y' 'N' 'D'
 
-To start a local development server, run:
+2.Module screen -- it shows data in cards from get method if want to add new module it shows dropdown which contains projects which is in active state 'Y'.the creted module bind with that selected project with that P_ID  MOD_P_ID
 
-```bash
-ng serve
-```
+3.methods screen -- it has no getmethods so...in module screen if user click on getmodule button on a selected card it takes that card ID and calls API and gets data...if response was empty ...we have to create a new method with that selected module ID
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Projects---Module---Methods (3 has bindings)
 
-## Code scaffolding
+----------------------------------------------------------------------------------------------------------------------
+#projects
+get -- "http://spyhreagpapi.local.com/Service.svc/GetProjects"
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+for adding project or update project --endpoint--"/InsertProject"
+const obj = {
+        "prj": {
+          P_ID: 0, (Random frombackend)
+          P_PEP_P_ID: 1090,
+          P_PRJ_NAME: this.myform.value.projectname,
+          P_API_URL_DEV: this.myform.value.devurl,
+          P_API_URL_STAG: this.myform.value.stagingurl,
+          P_API_URL_PROD: this.myform.value.produrl,
+          P_API_URL_TEST: this.myform.value.testurl,
+          P_TS: "",
+          P_ACTIVE: this.checkValue,
+          action: "A",                          // if action :'A' add or 'U' update
+          P_U_ID: Number(localStorage.getItem("key"))
+        }
+      };
+      
+for adding delete project --endpoint--"/DeleteRecords"
+const obj = {
+      "prj": {
+        P_ID: x.P_ID,
+        action: "D",        // if action :'D' delete
+      }
+    };    
+    
+---------------------------------------------------------------------------------------------------------
+    
+#Modules
+get modules -- "http://spyhreagpapi.local.com/Service.svc/GetmodulesInfo"
 
-```bash
-ng generate component component-name
-```
+for adding module or update project --endpoint-"/AddModule"
+	const obj = {
+    mod: {
+      MOD_ID: 0,                                   //random num series from backend
+      MOD_P_ID: this.moduleForm.value.projectId,   //it takes the project which is to be binded (projects--module--methods) 
+      MOD_NAME: this.moduleForm.value.name,        //A project is active it shows in module screen ...it selects fromdropdown which is  
+      MOD_DESC: this.moduleForm.value.description, 
+      MOD_ACTIVE: this.moduleForm.value.active ? 'Y' : 'N',
+      action: 'A',
+      MOD_U_ID: Number(localStorage.getItem('key')),
+    }
+  };
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+for adding delete project --endpoint--"/DeleteModule"
+const obj = {
+       "mod": {
+    "MOD_ID": 101,
+    "action": "D"
+  }
+  
+  -------------------------------------------------------------------------
+#Methods
 
-```bash
-ng generate --help
-```
+/GetApiMethods
+    const obj = {
+      "md": {
+        mod: 1
+      }
+    };
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+ /AddMethods
+ex: const obj = {
+      "m": {
+        M_ID: this.userid,
+        M_MOD_ID: Number(this.modulename),
+        M_NAME: this.myform.value.name,
+        M_DESC: this.myform.value.Description,
+        M_REQUEST_URL_SAMPLE: this.myform.value.requrl,
+        M_RESPONCE_URL_SAMPLE: this.myform.value.resurl,
+        M_ACTIVE: this.checkValue,
+        M_TYPE: "G",
+        action: "A",
+        M_TS: this.date.getDate() + '-' + (this.date.getMonth() + 1) + '-' + this.date.getFullYear()
+      }
+ };
+ 
+/DeleteMethod
+ 
+ex: const obj = {
+      "m": {
+        M_ID: x.M_ID,
+        action: "D",
+      }
+    };   
