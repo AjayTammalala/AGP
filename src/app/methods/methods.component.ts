@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+declare let alertify: any;
 
 @Component({
   selector: 'app-methods',
@@ -107,7 +108,7 @@ export class MethodsComponent implements OnInit {
   addMethods() {
     if (this.methodform.invalid) {
       this.methodform.markAllAsTouched();
-      alert('Please fill all required fields');
+      alertify.error("Please fill all required fields");
       return;
     }
 
@@ -127,12 +128,12 @@ export class MethodsComponent implements OnInit {
 
     this.auth.Getaddmethods(payload).subscribe({
       next: () => {
-        alert('Method added successfully!');
+        alertify.success("Method added successfully!");
         this.addform = false;
         this.getmethodsdata(this.selectedModule.MOD_ID);
       },
       error: () => {
-        alert('Failed to add method.');
+        alertify.error("Failed to add method.")
       },
     });
   }
@@ -171,7 +172,7 @@ export class MethodsComponent implements OnInit {
   updateMethod() {
     if (this.methodform.invalid) {
       this.methodform.markAllAsTouched();
-      alert('Please fill all required fields');
+      alertify.error('Please fill all required fields')
       return;
     }
 
@@ -191,7 +192,7 @@ export class MethodsComponent implements OnInit {
 
     this.auth.Getaddmethods(payload).subscribe({
       next: () => {
-        alert('Method updated successfully!');
+        alertify.success('Method Updated Succesfully..!')
         this.addform = false;
         this.getmethodsdata(this.selectedModule.MOD_ID);
       },
@@ -212,11 +213,11 @@ export class MethodsComponent implements OnInit {
 
     this.auth.deleteMethod(payload).subscribe({
       next: () => {
-        alert('Method deleted successfully!');
+        alertify.success("Method deleted successfully!");
         this.getmethodsdata(this.selectedModule.MOD_ID); 
       },
       error: () => {
-        alert('Failed to delete method.');
+        alertify.error('Failed to delete method.')
       },
     });
   }

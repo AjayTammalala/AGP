@@ -4,8 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { log } from 'console';
 import { Router } from '@angular/router';
-
-
+declare let alertify: any;
 
 @Component({
   selector: 'app-module',
@@ -55,6 +54,7 @@ export class ModuleComponent
  
   loadModules() :void {
     this.auth.getModulesDataFromAPI().subscribe(data => {
+      alertify.success('Modules received succesfully!')
       console.log("Module API data", data);
       this.modules = data;
       this.applyFilters();
@@ -80,7 +80,6 @@ export class ModuleComponent
     if (term) {
       filtered = filtered.filter(m => m.MOD_NAME.toLowerCase().includes(term));
     }
- 
     this.filteredModules = filtered;
   }
  
@@ -172,7 +171,7 @@ export class ModuleComponent
  insertModule() {
   if (this.moduleForm.invalid) {
     this.moduleForm.markAllAsTouched();
-    alert('Please fill out all fields correctly.');
+    alertify.error('Please fill out all fields correctly.');
     return;
   }
   const payload = {
@@ -190,12 +189,12 @@ export class ModuleComponent
   console.log(payload);
   this.auth.insertModule(payload).subscribe({
     next: () => {
-      alert('Module added successfully!');
+      alertify.success("Module added successfully!");
       this.loadModules();
         this.navbar = true;
     },
     error: () => {
-      alert('Failed to add module.');
+      alertify.error('Failed to add module.')
     }
   });
 }
@@ -203,7 +202,7 @@ export class ModuleComponent
  
   updateModule() {
     if (this.moduleForm.invalid) {
-      alert('Please fill out all fields correctly.');
+      alertify.error('Please fill out all fields correctly.')
       return;
     }
  
@@ -222,11 +221,11 @@ export class ModuleComponent
  
     this.auth.updateModule(payload).subscribe({
       next: () => {
-        alert('Module updated successfully!');
+        alertify.success('Module updated successfully!')
         this.loadModules();
       },
       error: () => {
-        alert('Failed to update module.');
+        alertify.error('Failed to update module.')
       }
     });
     this.navbar=true;

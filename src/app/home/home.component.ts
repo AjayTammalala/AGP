@@ -7,7 +7,6 @@ import { NgFor } from '@angular/common';
 import { log } from 'node:console';
 
 
-
 @Component({
   selector: 'app-home',
   standalone: false,

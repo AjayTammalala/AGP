@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators ,ReactiveFormsModule, FormsModule} from '@angular/forms';
 
+declare let alertify: any;
 
 @Component({
   selector: 'app-dashboard',
@@ -19,6 +20,7 @@ export class DashboardComponent {
   add: boolean = false;
   addEdit: boolean = false;
   navbar: boolean =true;
+  
 
   searchTerm: string = '';
   selectedStatus: string = 'Y'; 
@@ -28,12 +30,13 @@ export class DashboardComponent {
 
   pop: boolean = false;
   selectedProject: any = null;
+  
 
   constructor(
     private http: HttpClient,
     private authServ: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
   ) {
     this.myform = this.fb.group({
       projectname: ['', Validators.required],
@@ -52,13 +55,14 @@ export class DashboardComponent {
   getprojects() {
     this.authServ.getdatafromAPI().subscribe(
       (response) => {
+        alertify.success("Project received from API successfully!");
         this.allProjects = response;
         this.applyStatusFilter();
         this.editdata = false;
         this.grid = true;
       },
       (error) => {
-        console.error('Failed to fetch projects', error);
+        alertify.error("Failed to fetch project.", error);
       }
     );
   }
@@ -68,7 +72,8 @@ export class DashboardComponent {
 
     if (this.selectedStatus === 'All') {
       this.filteredProjects = this.allProjects.filter(project =>
-        project.P_PRJ_NAME?.toLowerCase().includes(term)
+        project.P_PRJ_NAME?.toLowerCase().includes(term),
+       
       );
     } else if (this.selectedStatus === 'Y') {
       this.filteredProjects = this.allProjects.filter(project =>
@@ -131,7 +136,7 @@ export class DashboardComponent {
   InsertProject() {
     if (this.myform.invalid) {
       this.myform.markAllAsTouched();
-      alert("Please fill out all fields correctly.");
+       alertify.error("Please fill out all fields correctly.")
       return;
     }
 
@@ -154,20 +159,20 @@ console.log(obj);
 
     this.authServ.insertProject(obj).subscribe({
       next: () => {
-        alert("Project added successfully!");
+        alertify.success("Project added successfully!");
         this.getprojects();
         this.cancel();
         this.getprojects();
       },
       error: () => {
-        alert("Failed to add project.");
+          alertify.error("Failed to add project.");
       }
     });
   }
 
   updateProject() {
     if (this.myform.invalid) {
-      alert("Please fill out all fields correctly.");
+      alertify.error("Please fill out all fields correctly.")
       return;
     }
 
@@ -194,7 +199,7 @@ console.log(obj);
         this.cancel();
       },
       error: () => {
-        alert("Failed to update project.");
+      alertify.error("Failed to update project.")
       }
     });
   }

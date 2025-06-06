@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
+declare let alertify: any;
 
 
 @Component({
@@ -27,7 +28,7 @@ this.auth.login(body).subscribe({
   next:(res) => {   
     console.log(res);
     if ( res == -1) {
-      alert("Invalid creds");
+      alertify.error("Invalid Credentials...!");
       this.router.navigate(['/login']);
     }
     else{

@@ -18,6 +18,7 @@ import { MethodsComponent } from './methods/methods.component';
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
