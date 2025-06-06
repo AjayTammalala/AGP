@@ -43,7 +43,7 @@ export class ModuleComponent
       MOD_P_ID: ['', Validators.required],
       MOD_TS: new Date().toISOString(),
       MOD_U_ID: Number(localStorage.getItem('key')),
-      MOD_ACTIVE: [true ] //['Y']
+      MOD_ACTIVE: [true ] 
     });
   }
  
@@ -91,7 +91,6 @@ export class ModuleComponent
     this.statusFilter = event.target.value;
     this.applyFilters();
   }
- 
  
   popup(module: any) {
     this.selectedModule = module;
