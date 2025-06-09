@@ -1,46 +1,52 @@
 
-<h1 style="text-align: center;">Login Page</h1>
+<div class="body">
+  <h1 class="page-title">Login Page</h1>
 
-<div class="container">
-  <form #form="ngForm" (ngSubmit)="login()">
-    <label for="email">User Email:</label>
-    <input
-      type="email"
-      name="email"
-      [(ngModel)]="email"
-      #emailRef="ngModel"
-      required
-      email
-    />
-    <div *ngIf="emailRef.invalid && emailRef.touched" style="color: red;">
-      <div *ngIf="emailRef.errors?.['required']">Email is required.</div>
-      <div *ngIf="emailRef.errors?.['email']">Enter a valid email address.</div>
-    </div>
-    <br /><br />
-
-    <label for="password">Enter Password:</label>
-    <input
-      type="password"
-      name="password"
-      [(ngModel)]="password"
-      #passwordRef="ngModel"
-      required
-      minlength="6"
-    />
-    <div *ngIf="passwordRef.invalid && passwordRef.touched" style="color: red;">
-      <div *ngIf="passwordRef.errors?.['required']">Password is required.</div>
-      <div *ngIf="passwordRef.errors?.['minlength']">
-        Password must be at least 6 characters long.
+<div class="login-container">
+  <form #form="ngForm" (ngSubmit)="login()" class="login-form">
+ 
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        #emailRef="ngModel"
+        required
+        email
+        placeholder="Enter your email"
+      />
+      <div *ngIf="emailRef.invalid && emailRef.touched" class="error-message">
+        <div *ngIf="emailRef.errors?.['required']">Email is required.</div>
+        <div *ngIf="emailRef.errors?.['email']">Enter a valid email address.</div>
       </div>
     </div>
-    <br /><br />
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        #passwordRef="ngModel"
+        required
+        minlength="6"
+        placeholder="Enter your password"
+      />
+      <div *ngIf="passwordRef.invalid && passwordRef.touched" class="error-message">
+        <div *ngIf="passwordRef.errors?.['required']">Password is required.</div>
+        <div *ngIf="passwordRef.errors?.['minlength']">
+          Password must be at least 6 characters long.
+        </div>
+      </div>
+    </div>
 
     <button type="submit" [disabled]="form.invalid">Login</button>
-    <br /><br />
 
-    <p *ngIf="errormessage" style="color: red;">{{ errormessage }}</p>
+    <p *ngIf="errormessage" class="error-banner">{{ errormessage }}</p>
   </form>
 </div>
 
+</div>
 
-  
+

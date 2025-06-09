@@ -21,7 +21,10 @@ export class MethodsComponent implements OnInit {
   selectedmethod: any = null;
   pop: boolean = false;
   edit: boolean = false;
-  statusFilter: string = 'all'; 
+  statusFilter: string = 'all';
+  searchText: string = ''; 
+  urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?$/;
+  navbar : boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,8 +35,8 @@ export class MethodsComponent implements OnInit {
       M_MOD_ID: [''],
       M_NAME: ['', Validators.required],
       M_DESC: ['', Validators.required],
-      M_REQUEST_URL_SAMPLE: ['', Validators.required],
-      M_RESPONCE_URL_SAMPLE: ['', Validators.required],
+      M_REQUEST_URL_SAMPLE: ['', [Validators.required, Validators.pattern(this.urlPattern)]],
+      M_RESPONCE_URL_SAMPLE: ['', [Validators.required, Validators.pattern(this.urlPattern)]],
       M_ACTIVE: [true],
     });
   }
@@ -51,7 +54,24 @@ export class MethodsComponent implements OnInit {
 
     this.auth.getMethodsfromURL(payload).subscribe({
       next: (data: any[]) => {
-        this.modulesdata = this.applyFilter(data);
+        let filteredData = data;
+
+        if (this.statusFilter !== 'all') {
+          filteredData = filteredData.filter((item) =>
+            this.statusFilter === 'active' ? item.M_ACTIVE === 'Y' :
+            this.statusFilter === 'inactive' ? item.M_ACTIVE === 'N' :
+            this.statusFilter === 'deleted' ? item.M_ACTIVE === 'D' : true
+          );
+        }
+
+        if (this.searchText.trim() !== '') {
+          const lowerSearch = this.searchText.toLowerCase();
+          filteredData = filteredData.filter(item =>
+            item.M_NAME?.toLowerCase().includes(lowerSearch)
+          );
+        }
+
+        this.modulesdata = filteredData;
         this.norecords = this.modulesdata.length === 0;
       },
       error: (err) => {
@@ -60,16 +80,13 @@ export class MethodsComponent implements OnInit {
     });
   }
 
-  applyFilter(data: any[]): any[] {
-    if (this.statusFilter === 'all') {
-      return data;
-    }
-    else if (this.statusFilter === 'inactive'){
-      return data.filter((item) => item.M_ACTIVE == 'N');
-    }
-    else {
-      return data.filter((item) => item.M_ACTIVE === 'Y');
-    }
+  onStatusFilterChange(event: any): void {
+    this.statusFilter = event.target.value;
+    this.getmethodsdata(this.selectedModule.MOD_ID);
+  }
+
+  onSearchChange(): void {
+    this.getmethodsdata(this.selectedModule.MOD_ID);
   }
 
   loadModules(moduleID: number): void {
@@ -91,13 +108,9 @@ export class MethodsComponent implements OnInit {
     });
   }
 
-  onStatusFilterChange(event: any): void {
-    this.statusFilter = event.target.value;
-    this.getmethodsdata(this.selectedModule.MOD_ID); 
-  }
-
   addmodule(): void {
     this.norecords = false;
+    this.navbar = false;
     this.addform = true;
     this.methodform.reset({
       M_MOD_ID: this.selectedModule.MOD_ID,
@@ -136,12 +149,14 @@ export class MethodsComponent implements OnInit {
         alertify.error("Failed to add method.")
       },
     });
+    this.navbar=true;
   }
 
   cancel() {
     this.addform = false;
     this.norecords = this.modulesdata.length === 0;
     this.methodform.reset();
+    this.navbar=true;
   }
 
   popup(md: any) {
@@ -155,6 +170,7 @@ export class MethodsComponent implements OnInit {
   }
 
   editMethod(md: any) {
+    this.navbar=false;
     this.addform = true;
     this.edit = true;
     this.selectedmethod = md;
@@ -197,9 +213,10 @@ export class MethodsComponent implements OnInit {
         this.getmethodsdata(this.selectedModule.MOD_ID);
       },
       error: () => {
-        alert('Failed to update method.');
+        alertify.success('Failed to update method.');
       },
     });
+    this.navbar=true;
   }
 
   deleteMethod(method: any) {
@@ -214,7 +231,7 @@ export class MethodsComponent implements OnInit {
     this.auth.deleteMethod(payload).subscribe({
       next: () => {
         alertify.success("Method deleted successfully!");
-        this.getmethodsdata(this.selectedModule.MOD_ID); 
+        this.getmethodsdata(this.selectedModule.MOD_ID);
       },
       error: () => {
         alertify.error('Failed to delete method.')

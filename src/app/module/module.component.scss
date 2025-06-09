@@ -2,15 +2,20 @@
   display: flex;
   align-items: center;
   padding: 10px 20px;
+  
 }
 
 .dropdown-left {
   flex: 1;
 }
-
+.dropdown-left select {
+  padding: 6px;
+  border-radius: 4px;
+  border-color: 1px solid #ccc;
+  
+}
 .spaced-between {
   justify-content: space-between;
-  width: 100%;
 }
 
 .cardslist {
@@ -148,11 +153,19 @@ button.secondary {
   width: 100%;
 }
 
-.search-input {
+.searchinput {
   padding: 8px;
   width: 300px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  margin-right: 5%;
+}
+.searchinput input {
+  border: none;            
+  outline: none;            
+  background: transparent;  
+  width: 100%;
+  font-size: 18px;        
 }
 .addbuttonn{
   width: 15%;
@@ -169,4 +182,11 @@ button.secondary {
   color: red;
   font-size: 16px;
 
+}
+
+.rowspacedbetween {
+  display: flex;                 
+  justify-content: space-between; 
+  align-items: center;           
+  width: 100%;               
 }

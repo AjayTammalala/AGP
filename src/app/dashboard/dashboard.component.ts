@@ -30,7 +30,8 @@ export class DashboardComponent {
 
   pop: boolean = false;
   selectedProject: any = null;
-  
+  urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?$/;
+
 
   constructor(
     private http: HttpClient,
@@ -40,10 +41,10 @@ export class DashboardComponent {
   ) {
     this.myform = this.fb.group({
       projectname: ['', Validators.required],
-      devurl: ['',Validators.required],
-      stagingurl: ['',Validators.required],
-      produrl: ['',Validators.required],
-      testurl: ['',Validators.required],
+      devurl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
+      stagingurl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
+      produrl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
+      testurl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
       isActive: [false]
     });
   }
@@ -55,7 +56,6 @@ export class DashboardComponent {
   getprojects() {
     this.authServ.getdatafromAPI().subscribe(
       (response) => {
-        alertify.success("Project received from API successfully!");
         this.allProjects = response;
         this.applyStatusFilter();
         this.editdata = false;
@@ -83,6 +83,12 @@ export class DashboardComponent {
     } else if (this.selectedStatus === 'N') {
       this.filteredProjects = this.allProjects.filter(project =>
         project.P_ACTIVE === 'N' &&
+        project.P_PRJ_NAME?.toLowerCase().includes(term)
+      );
+    }
+    else if (this.selectedStatus === 'D') {
+      this.filteredProjects = this.allProjects.filter(project =>
+        project.P_ACTIVE === 'D' &&
         project.P_PRJ_NAME?.toLowerCase().includes(term)
       );
     }
@@ -194,7 +200,7 @@ console.log(obj);
 
     this.authServ.updateProject(updatedProject).subscribe({
       next: () => {
-        alert("Project updated successfully!");
+        alertify.success("Project updated successfully!");
         this.getprojects();
         this.cancel();
       },
@@ -222,9 +228,11 @@ console.log(obj);
 
       this.authServ.deleteProject(deletePayload).subscribe({
         next: () => {
+          alertify.success("Project deleted Succesfully..!")
           this.getprojects();
         },
         error: (err) => {
+          alertify.error("Delete failed")
           console.error("Delete failed", err);
         }
       });

@@ -1,27 +1,24 @@
-<div class="row" *ngIf="navbar">
+
+<div class="rowspacedbetween" *ngIf="navbar">
   <div class="dropdown-left">
     <label for="statusFilter">Filter Modules:</label>
     <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onStatusChange($event)">
       <option value="All">All</option>
       <option value="Active">Active</option>
       <option value="Inactive">Inactive</option>
+      <option value="Deleted">Deleted</option>
     </select>
   </div>
-</div>
- 
-<div class="row spaced-between" *ngIf="navbar">
-  <input
-    type="text"
-    placeholder="Search modules..."
-    [(ngModel)]="searchText"
-    (input)="filterModules()"
-    class="search-input"
-  />
+
+  <div class="searchinput">
+    <input type="text" placeholder="Search modules..." [(ngModel)]="searchText" (input)="filterModules()" class="search-input"/>
+  </div>
+
   <div class="addbuttonn">
-      <button class="add-button" (click)="addModule()">Add Module</button>
+    <button class="add-button" (click)="addModule()">Add Module</button>
   </div>
 </div>
- 
+
 <div *ngIf="grid">
   <div class="cardslist">
     <div class="card" *ngFor="let m of filteredModules">
@@ -65,12 +62,18 @@
     <div class="project-dropdown" *ngIf="add">
       <label for="projectSelect" >Select Project</label>
       <select id="projectSelect" formControlName="MOD_P_ID" style="width: 100%; padding: 8px; border-radius: 5px;
-  border: 1px solid #ccc; box-sizing: border-box;">
-        <option *ngFor="let project of activeProjects" [value]="project.P_ID">
+        border: 1px solid #ccc; box-sizing: border-box;">
+    <option value="" disabled selected>*Select any project from dropdown</option>       
+    <option *ngFor="let project of activeProjects" [value]="project.P_ID">
           {{ project.P_PRJ_NAME }} 
         </option>
       </select>
     </div>
+    <div *ngIf="moduleForm.get('MOD_P_ID')?.invalid && moduleForm.get('MOD_P_ID')?.touched" class="error">
+  *Please select any Project
+</div>
+
+
     <label>Module Name</label>
     <input type="text" formControlName="MOD_NAME" />
     <div *ngIf="moduleForm.get('MOD_NAME')?.invalid && moduleForm.get('MOD_NAME')?.touched" class="error">

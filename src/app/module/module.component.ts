@@ -37,6 +37,7 @@ export class ModuleComponent
  
   constructor(private auth: AuthService, private fb: FormBuilder, private router: Router)  {
     this.moduleForm = this.fb.group({
+      
       MOD_ID: [''],
       MOD_NAME: ['', Validators.required],
       MOD_DESC: ['', Validators.required],
@@ -54,7 +55,6 @@ export class ModuleComponent
  
   loadModules() :void {
     this.auth.getModulesDataFromAPI().subscribe(data => {
-      alertify.success('Modules received succesfully!')
       console.log("Module API data", data);
       this.modules = data;
       this.applyFilters();
@@ -72,7 +72,10 @@ export class ModuleComponent
       filtered = filtered.filter(m => m.MOD_ACTIVE === 'Y' );
     } else if (this.statusFilter === 'Inactive') {
       filtered = filtered.filter(m => m.MOD_ACTIVE === 'N');
-    } else {
+    }else if (this.statusFilter === 'Deleted') {
+      filtered = filtered.filter(m => m.MOD_ACTIVE === 'D');
+    } 
+    else {
       filtered = [...this.modules];
     }
  
@@ -117,6 +120,7 @@ export class ModuleComponent
     this.add = true;
     this.edit = false;
     this.moduleForm.reset();
+    this.moduleForm.patchValue({ MOD_P_ID: '' }); 
     this.navbar=false;
     this.loadProjects();
   }
@@ -168,7 +172,7 @@ export class ModuleComponent
   }
  
  insertModule() {
-  if (this.moduleForm.invalid) {
+  if (this.moduleForm.invalid || this.moduleForm.value.MOD_P_ID === 'default') {
     this.moduleForm.markAllAsTouched();
     alertify.error('Please fill out all fields correctly.');
     return;
@@ -248,11 +252,11 @@ export class ModuleComponent
  
     this.auth.updateModule(payload).subscribe({
       next: () => {
-        alert('Module deleted successfully!');
+        alertify.success('Module deleted successfully!');
         this.loadModules();
       },
       error: () => {
-        alert('Failed to delete module.');
+        alertify.error('Failed to delete module.');
       }
     });
   }

@@ -1,14 +1,22 @@
-<div class="filter-container">
-  <label for="statusFilter">Filter by Status:</label>
-  <select id="statusFilter" (change)="onStatusFilterChange($event)">
-    <option value="all">All</option>
-    <option value="active">Active</option>
-    <option value="inactive">Inactive</option>
-  </select>
-</div>
 
-<div class="addmetbutton">
-  <button id="addmetbutton" (click)="addmodule()">Add Method</button>
+<div class="filter-container rowspacedbetween" *ngIf="navbar">
+  <div class="filter">
+    <label for="statusFilter">Filter by Status:</label>
+    <select id="statusFilter" (change)="onStatusFilterChange($event)">
+      <option value="all">All</option>
+      <option value="active">Active</option>
+      <option value="inactive">Inactive</option>
+      <option value="deleted">Deleted</option>
+    </select>
+  </div>
+
+  <div class="searchinput">
+    <input type="text" [(ngModel)]="searchText" (input)="onSearchChange()" placeholder="Search Method Name">
+  </div>
+
+  <div class="addmetbutton">
+    <button id="addmetbutton" (click)="addmodule()">Add Method</button>
+  </div>
 </div>
 
 <div *ngIf="!addform" class="cardslist">
@@ -77,12 +85,15 @@
     <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.invalid && methodform.get('M_REQUEST_URL_SAMPLE')?.touched" class="errorr">
         *Method Request URL is Required
     </div>
+    <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.errors?.['pattern']" class="errorr">*Enter a valid URL (e.g., https://example.com)</div>
 
     <label>Method Response URL</label>
     <input type="text" formControlName="M_RESPONCE_URL_SAMPLE" />
     <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.invalid && methodform.get('M_RESPONCE_URL_SAMPLE')?.touched" class="errorr">
         *Method Response URL is Required
     </div>
+    <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.errors?.['pattern']" class="errorr">*Enter a valid URL (e.g., https://example.com)</div>
+
 
     <label>Active</label>
     <input type="checkbox" formControlName="M_ACTIVE" />

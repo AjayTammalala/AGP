@@ -26,6 +26,7 @@ login() {
   
 this.auth.login(body).subscribe({
   next:(res) => {   
+    alertify.success('login succesful..!')
     console.log(res);
     if ( res == -1) {
       alertify.error("Invalid Credentials...!");

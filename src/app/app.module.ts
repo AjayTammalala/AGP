@@ -8,7 +8,6 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SettingsComponent } from './settings/settings.component';
-import { ProfilesComponent } from './profiles/profiles.component';
 import { RouterModule } from '@angular/router';
 import { ModuleComponent } from './module/module.component';
 import { MethodsComponent } from './methods/methods.component';
@@ -26,7 +25,6 @@ import { MethodsComponent } from './methods/methods.component';
     LoginComponent,
     DashboardComponent,
     SettingsComponent,
-    ProfilesComponent,
     ModuleComponent,
     MethodsComponent,
     
