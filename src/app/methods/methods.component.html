@@ -70,30 +70,48 @@
 
     <label>Method Name</label>
     <input type="text" formControlName="M_NAME" />
-    <div *ngIf="methodform.get('M_NAME')?.invalid && methodform.get('M_NAME')?.touched" class="errorr">
-        *Method Name is Required
+    <div *ngIf="methodform.get('M_NAME')?.touched && methodform.get('M_NAME')?.invalid" class="errorr">
+        <div *ngIf="methodform.get('M_NAME')?.errors?. ['maxlength']" class="errorr">
+        *Max length is exceeded
+        </div>
+          <div *ngIf="methodform.get('M_NAME')?.errors?.['required']">
+         *Method Name is Required
+        </div>
     </div>
+    
 
     <label>Description</label>
     <input type="text" formControlName="M_DESC" />
-    <div *ngIf="methodform.get('M_DESC')?.invalid && methodform.get('M_DESC')?.touched" class="errorr">
-        *Method Description is Required
+     <div *ngIf="methodform.get('M_DESC')?.touched && methodform.get('M_DESC')?.invalid" class="errorr">
+        <div *ngIf="methodform.get('M_DESC')?.errors?. ['maxlength']" class="errorr">
+        *Max length is exceeded
+        </div>
+          <div *ngIf="methodform.get('M_DESC')?.errors?.['required']">
+         *Method Description is Required
+        </div>
     </div>
 
     <label>Method Request URL</label>
     <input type="text" formControlName="M_REQUEST_URL_SAMPLE" />
     <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.invalid && methodform.get('M_REQUEST_URL_SAMPLE')?.touched" class="errorr">
-        *Method Request URL is Required
+      <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.errors?.['pattern']" class="errorr">
+        *Enter a valid URL (e.g., https://example.com)
+      </div>
+      <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.errors?.['required']" class="errorr">
+         *Method URL is Required
+      </div>
     </div>
-    <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.errors?.['pattern']" class="errorr">*Enter a valid URL (e.g., https://example.com)</div>
 
     <label>Method Response URL</label>
     <input type="text" formControlName="M_RESPONCE_URL_SAMPLE" />
     <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.invalid && methodform.get('M_RESPONCE_URL_SAMPLE')?.touched" class="errorr">
-        *Method Response URL is Required
+      <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.errors?.['pattern']" class="errorr">
+        *Enter a valid URL (e.g., https://example.com)
+      </div>
+      <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.errors?.['required']" class="errorr">
+         *Method URL is Required
+      </div>
     </div>
-    <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.errors?.['pattern']" class="errorr">*Enter a valid URL (e.g., https://example.com)</div>
-
 
     <label>Active</label>
     <input type="checkbox" formControlName="M_ACTIVE" />

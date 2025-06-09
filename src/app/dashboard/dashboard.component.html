@@ -64,9 +64,17 @@
     <form [formGroup]="myform">
       <label>Project Name</label>
       <input type="text" formControlName="projectname" />
-      <div *ngIf="myform.get('projectname')?.invalid && myform.get('projectname')?.touched" class="error">
-        *Project Name is Required
-      </div>
+       <div *ngIf="myform.get('projectname')?.touched && myform.get('projectname')?.invalid" class="error">
+        <div *ngIf="myform.get('projectname')?.errors?. ['maxlength']" class="error">
+        *Max length is exceeded
+        </div>
+          <div *ngIf="myform.get('projectname')?.errors?.['required']">
+         *Project Name is Required
+        </div>
+    </div>
+
+
+
       <label>Development URL</label>
       <input type="text" formControlName="devurl" />
       <div *ngIf="myform.get('devurl')?.invalid && myform.get('devurl')?.touched" class="error">

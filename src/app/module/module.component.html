@@ -84,15 +84,27 @@
 
     <label>Module Name</label>
     <input type="text" formControlName="MOD_NAME" />
-    <div *ngIf="moduleForm.get('MOD_NAME')?.invalid && moduleForm.get('MOD_NAME')?.touched" class="error">
-        *Module Name is Required
+    <div *ngIf="moduleForm.get('MOD_NAME')?.touched && moduleForm.get('MOD_NAME')?.invalid" class="error">
+        <div *ngIf="moduleForm.get('MOD_NAME')?.errors?. ['maxlength']" class="error">
+        *Max length is exceeded
+        </div>
+          <div *ngIf="moduleForm.get('MOD_NAME')?.errors?.['required']">
+         *Module name is Required
+        </div>
     </div>
+   
  
     <label>Description</label>
     <input type="text" formControlName="MOD_DESC" />
-    <div *ngIf="moduleForm.get('MOD_DESC')?.invalid && moduleForm.get('MOD_DESC')?.touched" class="error">
-        *Description is Required
+    <div *ngIf="moduleForm.get('MOD_DESC')?.touched && moduleForm.get('MOD_DESC')?.invalid" class="error">
+        <div *ngIf="moduleForm.get('MOD_DESC')?.errors?. ['maxlength']" class="error">
+        *Max length is exceeded
+        </div>
+          <div *ngIf="moduleForm.get('MOD_DESC')?.errors?.['required']">
+         *Description is Required
+        </div>
     </div>
+    
  
     <label>Active</label>
     <input type="checkbox" formControlName="MOD_ACTIVE" />

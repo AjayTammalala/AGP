@@ -40,7 +40,7 @@ export class DashboardComponent {
     private router: Router,
   ) {
     this.myform = this.fb.group({
-      projectname: ['', Validators.required],
+      projectname: ['', [Validators.required, Validators.maxLength(10)]],
       devurl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
       stagingurl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
       produrl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],

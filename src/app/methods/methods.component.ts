@@ -33,8 +33,8 @@ export class MethodsComponent implements OnInit {
   ) {
     this.methodform = this.fb.group({
       M_MOD_ID: [''],
-      M_NAME: ['', Validators.required],
-      M_DESC: ['', Validators.required],
+      M_NAME: ['', [Validators.required, Validators.maxLength(10)]],
+      M_DESC: ['',[Validators.required, Validators.maxLength(15)] ],
       M_REQUEST_URL_SAMPLE: ['', [Validators.required, Validators.pattern(this.urlPattern)]],
       M_RESPONCE_URL_SAMPLE: ['', [Validators.required, Validators.pattern(this.urlPattern)]],
       M_ACTIVE: [true],

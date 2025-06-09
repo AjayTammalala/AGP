@@ -40,8 +40,8 @@ export class ModuleComponent
     this.moduleForm = this.fb.group({
       
       MOD_ID: [''],
-      MOD_NAME: ['', Validators.required],
-      MOD_DESC: ['', Validators.required],
+      MOD_NAME: ['', [Validators.required, Validators.maxLength(10)]],
+      MOD_DESC: ['', [Validators.required, Validators.maxLength(15)] ],
       MOD_P_ID: ['', Validators.required],
       MOD_TS: new Date().toISOString(),
       MOD_U_ID: Number(localStorage.getItem('key')),
