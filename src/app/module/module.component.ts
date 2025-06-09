@@ -34,6 +34,7 @@ export class ModuleComponent
   moduleForm!: FormGroup;
   editingModuleId: number | null = null;
   x: any;
+  projectFilter : string = '';
  
   constructor(private auth: AuthService, private fb: FormBuilder, private router: Router)  {
     this.moduleForm = this.fb.group({
@@ -44,7 +45,7 @@ export class ModuleComponent
       MOD_P_ID: ['', Validators.required],
       MOD_TS: new Date().toISOString(),
       MOD_U_ID: Number(localStorage.getItem('key')),
-      MOD_ACTIVE: [true ] 
+      MOD_ACTIVE: true 
     });
   }
  
@@ -78,7 +79,9 @@ export class ModuleComponent
     else {
       filtered = [...this.modules];
     }
- 
+     if (this.projectFilter){
+      filtered = filtered.filter(m => m.MOD_P_ID == this.projectFilter);
+     }
     const term = this.searchText.toLowerCase();
     if (term) {
       filtered = filtered.filter(m => m.MOD_NAME.toLowerCase().includes(term));
@@ -86,14 +89,14 @@ export class ModuleComponent
     this.filteredModules = filtered;
   }
  
-  filterModules() {
-    this.applyFilters();
-  }
+  // filterModules() {
+  //   this.applyFilters();
+  // }
  
-  onStatusChange(event: any) {
-    this.statusFilter = event.target.value;
-    this.applyFilters();
-  }
+  // onStatusChange(event: any) {
+  //   this.statusFilter = event.target.value;
+  //   this.applyFilters();
+  // }
  
   popup(module: any) {
     this.selectedModule = module;

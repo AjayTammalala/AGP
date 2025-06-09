@@ -2,7 +2,7 @@
 <div class="rowspacedbetween" *ngIf="navbar">
   <div class="dropdown-left">
     <label for="statusFilter">Filter Modules:</label>
-    <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onStatusChange($event)">
+    <select id="statusFilter" [(ngModel)]="statusFilter" (change)="applyFilters()">
       <option value="All">All</option>
       <option value="Active">Active</option>
       <option value="Inactive">Inactive</option>
@@ -10,8 +10,16 @@
     </select>
   </div>
 
+  <div class="dropdown-left1">
+    <label for="projectFilter">Filter By projects:</label>
+    <select name="" id="projectFilter" [(ngModel)]="projectFilter" (change)="applyFilters()">
+      <option value="">Active Projects</option>
+      <option [value]="project.P_ID" *ngFor="let project of activeProjects">{{project.P_PRJ_NAME}}</option>
+    </select>
+  </div>
+
   <div class="searchinput">
-    <input type="text" placeholder="Search modules..." [(ngModel)]="searchText" (input)="filterModules()" class="search-input"/>
+    <input type="text" placeholder="Search modules..." [(ngModel)]="searchText" (input)="applyFilters()" class="search-input"/>
   </div>
 
   <div class="addbuttonn">
