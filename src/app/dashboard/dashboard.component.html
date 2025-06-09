@@ -65,42 +65,61 @@
       <label>Project Name</label>
       <input type="text" formControlName="projectname" />
        <div *ngIf="myform.get('projectname')?.touched && myform.get('projectname')?.invalid" class="error">
-        <div *ngIf="myform.get('projectname')?.errors?. ['maxlength']" class="error">
-        *Max length is exceeded
-        </div>
+          <div *ngIf="myform.get('projectname')?.errors?. ['maxlength']" class="error">
+          *Max length is exceeded
+          </div>
           <div *ngIf="myform.get('projectname')?.errors?.['required']">
-         *Project Name is Required
-        </div>
-    </div>
-
-
+          *Project Name is Required
+          </div>
+      </div>
 
       <label>Development URL</label>
       <input type="text" formControlName="devurl" />
       <div *ngIf="myform.get('devurl')?.invalid && myform.get('devurl')?.touched" class="error">
         *Development URL is Required
       </div>
-      <div *ngIf="myform.get('devurl')?.errors?.['pattern']" class="error">*Enter a valid URL (e.g., https://example.com) </div>
+      <div *ngIf="myform.get('devurl')?.touched && myform.get('devurl')?.invalid" class="error">
+          <div *ngIf="myform.get('devurl')?.errors?. ['pattern']" class="error">
+          *Please enter valid URL ex: (e.g.,  https://example.com )
+          </div>
+          <div *ngIf="myform.get('devurl')?.errors?.['required']">
+          *Development URL is Required
+          </div>
+      </div>
+
+
       <label>Staging URL</label>
       <input type="text" formControlName="stagingurl" />
-      <div *ngIf="myform.get('stagingurl')?.invalid && myform.get('stagingurl')?.touched" class="error">
-        *Staging URL is Required
+      <div *ngIf="myform.get('stagingurl')?.touched && myform.get('stagingurl')?.invalid" class="error">
+          <div *ngIf="myform.get('stagingurl')?.errors?. ['pattern']" class="error">
+          *Please enter valid URL ex: (e.g.,  https://example.com )
+          </div>
+          <div *ngIf="myform.get('stagingurl')?.errors?.['required']">
+          *Staging URL is Required
+          </div>
       </div>
-      <div *ngIf="myform.get('stagingurl')?.errors?.['pattern']" class="error">*Enter a valid URL (e.g., https://example.com) </div>
+
       <label>Production URL</label>
       <input type="text" formControlName="produrl" />
-      <div *ngIf="myform.get('produrl')?.invalid && myform.get('produrl')?.touched" class="error">
-        *Production URL is Required
+      <div *ngIf="myform.get('produrl')?.touched && myform.get('produrl')?.invalid" class="error">
+          <div *ngIf="myform.get('produrl')?.errors?. ['pattern']" class="error">
+          *Please enter valid URL ex: (e.g.,  https://example.com )
+          </div>
+          <div *ngIf="myform.get('produrl')?.errors?.['required']">
+          *Production URL is Required
+          </div>
       </div>
-      <div *ngIf="myform.get('produrl')?.errors?.['pattern']" class="error">*Enter a valid URL (e.g., https://example.com) </div>
 
       <label>Test URL</label>
       <input type="text" formControlName="testurl" />
-      <div *ngIf="myform.get('testurl')?.invalid && myform.get('testurl')?.touched" class="error">
-        *Test URL is Required
+     <div *ngIf="myform.get('testurl')?.touched && myform.get('produrl')?.invalid" class="error">
+        <div *ngIf="myform.get('testurl')?.errors?. ['pattern']" class="error">
+        *Please enter valid URL ex: (e.g.,  https://example.com )
+        </div>
+        <div *ngIf="myform.get('testurl')?.errors?.['required']">
+        *Production URL is Required
+        </div>
       </div>
-      <div *ngIf="myform.get('testurl')?.errors?.['pattern']" class="error">*Enter a valid URL (e.g., https://example.com) </div>
-
 
       <label>Active</label>
       <input type="checkbox" formControlName="isActive" />
