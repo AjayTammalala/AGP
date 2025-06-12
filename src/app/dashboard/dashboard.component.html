@@ -1,32 +1,33 @@
 
-
-
 <div class="navbar">
   <div class="action-bar" *ngIf="navbar">
-       <div class="filter-row" *ngIf="navbar">
-    <div class="dropdown">
-      <label for="project">Select Projects:</label>
-      <select name="project" id="project" [(ngModel)]="selectedStatus" (change)="applyStatusFilter()">
-        <option value="All">All</option>
-        <option value="Y">Active</option>
-        <option value="N">Inactive</option>
-        <option value ="D">Deleted</option>
-      </select>
-    </div>
+    <div class="filter-row" *ngIf="navbar">
+      <div class="dropdown">
+        <label for="project">Select Projects:</label>
+        <select name="project" id="project" [(ngModel)]="selectedStatus" (change)="applyStatusFilter()">
+          <option value="All">All</option>
+          <option value="Y">Active</option>
+          <option value="N">Inactive</option>
+          <option value ="D">Deleted</option>
+        </select>
+      </div>
   </div>
     <input
       type="text" placeholder="Search by Project Name" [(ngModel)]="searchTerm" (input)="applyStatusFilter()"
       class="search-input"
     />
     <div class="addbuttonn">
-      <button id="addbutton" (click)="addproject()">Add projects</button>
+      <button id="addbutton" (click)="addproject()">Add projects</button> <br>
     </div>
   </div>
 </div>
+
+<p  style="margin-left: 89%; margin-bottom: 0px;">Total Records:{{Rlength}} </p>
+
   <div class="cardslist" *ngIf="grid">
     <div class="card" *ngFor="let x of filteredProjects">
       <div class="c1">
-        <div class="c11">{{ x.P_PRJ_NAME }}</div>
+        <div class="c11"><span> {{ x.P_PRJ_NAME }} </span></div>
         <div class="c12">
           <img (click)="popup(x)" alt="eye icon" src="https://res.cloudinary.com/dlq6spyxk/image/upload/v1747135367/output-onlinepngtools_qu79fc.png" height="25px" />
           <img (click)="editproject(x)" alt="edit icon" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387576/output-onlinepngtools_i6uyhd.png" height="25px" />
@@ -39,9 +40,28 @@
       </div>
     </div>
   </div>
+
+  <div class="cardslist" *ngIf="del">
+    <div class="card" *ngFor="let x of filteredProjects">
+      <div class="c1">
+        <div class="c11"><span> {{ x.P_PRJ_NAME }} </span></div>
+        <div class="c12">
+          <img (click)="popup(x)" alt="eye icon" src="https://res.cloudinary.com/dlq6spyxk/image/upload/v1747135367/output-onlinepngtools_qu79fc.png" height="25px" />
+          <img (click)="editproject(x)" alt="edit icon" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387576/output-onlinepngtools_i6uyhd.png" height="25px" />
+          <!-- <img (click)="delproject(x)" alt="delete icon" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387963/966f969e-fa3f-4d9f-8e71-227b8c16c093.png" height="25px" /> -->
+        </div>
+      </div>
+      <div class="c2">
+        <p>Stage URL: <br /><a href="">{{ x.P_API_URL_DEV }}</a></p>
+        <p>Production URL: <br /><a href="">{{ x.P_API_URL_PROD }}</a></p>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="filteredProjects.length ===0 && grid" class="norecords">
       No Records Found
   </div>
+
   <div class="popup" *ngIf="pop">
     <div class="popup-content">
       <h1 style="text-align: center;">Project Details</h1>
@@ -58,6 +78,7 @@
       </div>
     </div>
   </div>
+
   <div class="container" *ngIf="(editdata || add) && !grid">
     <h3 *ngIf="add">Add Project</h3>
     <h3 *ngIf="editdata">Edit Project</h3>

@@ -30,17 +30,18 @@ export class ModuleComponent
   grid: boolean = true;
   add: boolean = false;
   edit: boolean = false;
- 
+  del : boolean = false;
   moduleForm!: FormGroup;
   editingModuleId: number | null = null;
   x: any;
   projectFilter : string = '';
+  Rlength : any;
  
   constructor(private auth: AuthService, private fb: FormBuilder, private router: Router)  {
     this.moduleForm = this.fb.group({
       
       MOD_ID: [''],
-      MOD_NAME: ['', [Validators.required, Validators.maxLength(10)]],
+      MOD_NAME: ['', [Validators.required, Validators.maxLength(15)]],
       MOD_DESC: ['', [Validators.required, Validators.maxLength(15)] ],
       MOD_P_ID: ['', Validators.required],
       MOD_TS: new Date().toISOString(),
@@ -71,13 +72,33 @@ export class ModuleComponent
  
     if (this.statusFilter === 'Active') {
       filtered = filtered.filter(m => m.MOD_ACTIVE === 'Y' );
-    } else if (this.statusFilter === 'Inactive') {
+       this.Rlength = filtered.length,
+      console.log("Rlength Y", this.Rlength);
+      this.grid = true;
+      this.del = false;
+    } 
+   
+    
+    else if (this.statusFilter === 'Inactive') {
       filtered = filtered.filter(m => m.MOD_ACTIVE === 'N');
-    }else if (this.statusFilter === 'Deleted') {
+        this.Rlength = filtered.length,
+      console.log("Rlength N", this.Rlength);
+      this.grid = true;
+      this.del = false;
+    }
+    else if (this.statusFilter === 'Deleted') {
       filtered = filtered.filter(m => m.MOD_ACTIVE === 'D');
+        this.Rlength = filtered.length,
+      console.log("Rlength D", this.Rlength);
+      this.grid = false;
+      this.del = true;
     } 
     else {
       filtered = [...this.modules];
+        this.Rlength = filtered.length,
+      console.log("Rlength All", this.Rlength);
+      this.grid = true;
+      this.del = false;
     }
      if (this.projectFilter){
       filtered = filtered.filter(m => m.MOD_P_ID == this.projectFilter);
@@ -88,15 +109,6 @@ export class ModuleComponent
     }
     this.filteredModules = filtered;
   }
- 
-  // filterModules() {
-  //   this.applyFilters();
-  // }
- 
-  // onStatusChange(event: any) {
-  //   this.statusFilter = event.target.value;
-  //   this.applyFilters();
-  // }
  
   popup(module: any) {
     this.selectedModule = module;
@@ -128,24 +140,23 @@ export class ModuleComponent
     this.loadProjects();
   }
  
- getMethods(module: any) {
-  const obj = {
-    md: {
-      mod: module.MOD_ID
-    }
-  };
-  console.log('Payload:', obj);
-  this.auth.getMethodsfromURL(obj).subscribe({
-    next: (data) => {
-      console.log('Fetched Methods:', data);
-      console.log('Fetched Methods:', data);
-      this.router.navigate(['home/methods', module.MOD_ID]);
-    },
-    error: (err) => {
-      console.error('Error fetching methods:', err);
-    }
-  });
-}
+//  getMethods(module: any) {
+//   const obj = {
+//     md: {
+//       mod: module.MOD_ID
+//     }
+//   };
+//   console.log('Payload:', obj);
+//   this.auth.getMethodsfromURL(obj).subscribe({
+//     next: (data) => {
+//       console.log('Fetched Methods:', data);
+//       console.log('Fetched Methods:', data);
+//     },
+//     error: (err) => {
+//       console.error('Error fetching methods:', err);
+//     }
+//   });
+// }
 
   editModule(module: any) {
     this.grid = false;

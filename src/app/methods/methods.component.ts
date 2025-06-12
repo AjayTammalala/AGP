@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
-import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
 declare let alertify: any;
+
 
 @Component({
   selector: 'app-methods',
@@ -12,171 +12,262 @@ declare let alertify: any;
   styleUrl: './methods.component.scss'
 })
 export class MethodsComponent implements OnInit {
-  methodform: FormGroup;
-  modulesdata: any[] = [];
-  modulesdatafromMethods: any[] = [];
-  norecords: boolean = false;
-  addform: boolean = false;
-  selectedModule: any;
-  selectedmethod: any = null;
+  selectedStatus: string = 'Active';
+  selectedProjectId: number | null = null;
+  selectedModuleId: number | null = null;
+  searchText: string = '';
+  activeProjects: any[] = [];
+  allModules: any[] = [];
+  filteredModules: any[] = [];
+  methods: any[] = [];
+  filteredMethods: any[] = [];
+  selectedmethod: any = [];
   pop: boolean = false;
+  addform: boolean = false;
+  grid: boolean = true;
   edit: boolean = false;
-  statusFilter: string = 'all';
-  searchText: string = ''; 
+  selectedModule: any;
+  methodform: FormGroup;
+  navbar: boolean = true;
+  activeModules: any;
+  add: boolean = false;
+  del : boolean = false;
+  Rlength : any;
   urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?$/;
-  navbar : boolean = true;
-
-  constructor(
-    private route: ActivatedRoute,
-    private auth: AuthService,
-    private fb: FormBuilder
-  ) {
+  urlPattern1 = /^(https?:\/\/|www\.)[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:/~+#]*[\w\-@?^=%&/~+#])?$/;
+ 
+  constructor(private authService: AuthService, private fb: FormBuilder) {
     this.methodform = this.fb.group({
-      M_MOD_ID: [''],
-      M_NAME: ['', [Validators.required, Validators.maxLength(10)]],
-      M_DESC: ['',[Validators.required, Validators.maxLength(15)] ],
-      M_REQUEST_URL_SAMPLE: ['', [Validators.required, Validators.pattern(this.urlPattern)]],
-      M_RESPONCE_URL_SAMPLE: ['', [Validators.required, Validators.pattern(this.urlPattern)]],
+      M_MOD_ID: ['', Validators.required],
+      M_NAME: ['', [Validators.required, Validators.maxLength(15)]],
+      M_DESC: ['', [Validators.required, Validators.maxLength(20)]],
+      M_REQUEST_URL_SAMPLE: ['', [Validators.required, Validators.pattern(this.urlPattern1)]],
+      M_RESPONCE_URL_SAMPLE: ['', [Validators.required, Validators.pattern(this.urlPattern1)]],
       M_ACTIVE: [true],
     });
   }
-
+ 
   ngOnInit(): void {
-    const moduleID = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadModules(moduleID);
-    this.getmethodsdata(moduleID);
+    this.selectedStatus = 'Y';
+    this.selectedProjectId = null;
+    this.selectedModuleId = null;
+    this.loadProjects();
+    this.loadModules();
+    this.loadMethods();
   }
-
-  getmethodsdata(id: number): void {
-    const payload = {
-      md: { mod: id },
-    };
-
-    this.auth.getMethodsfromURL(payload).subscribe({
+ 
+  loadProjects(): void {
+    this.authService.getdatafromAPI().subscribe({
       next: (data: any[]) => {
-        let filteredData = data;
-
-        if (this.statusFilter !== 'all') {
-          filteredData = filteredData.filter((item) =>
-            this.statusFilter === 'active' ? item.M_ACTIVE === 'Y' :
-            this.statusFilter === 'inactive' ? item.M_ACTIVE === 'N' :
-            this.statusFilter === 'deleted' ? item.M_ACTIVE === 'D' : true
-          );
+        this.activeProjects = data.filter((project: any) => project.P_ACTIVE === 'Y');
+        if (this.activeProjects.length > 0 && this.selectedProjectId === null) {
+          this.selectedProjectId = this.activeProjects[0].P_ID;
+         
         }
-
-        if (this.searchText.trim() !== '') {
-          const lowerSearch = this.searchText.toLowerCase();
-          filteredData = filteredData.filter(item =>
-            item.M_NAME?.toLowerCase().includes(lowerSearch)
-          );
-        }
-
-        this.modulesdata = filteredData;
-        this.norecords = this.modulesdata.length === 0;
       },
       error: (err) => {
-        console.error('Error fetching methods:', err);
-      },
-    });
-  }
-
-  onStatusFilterChange(event: any): void {
-    this.statusFilter = event.target.value;
-    this.getmethodsdata(this.selectedModule.MOD_ID);
-  }
-
-  onSearchChange(): void {
-    this.getmethodsdata(this.selectedModule.MOD_ID);
-  }
-
-  loadModules(moduleID: number): void {
-    this.auth.getModulesDataFromAPI().subscribe((data) => {
-      this.modulesdatafromMethods = data;
-      this.selectedModule = this.modulesdatafromMethods.find(
-        (module: any) => module.MOD_ID === moduleID
-      );
-      if (this.selectedModule) {
-        this.methodform.patchValue({
-          M_MOD_ID: this.selectedModule.MOD_ID,
-          M_NAME: '',
-          M_DESC: '',
-          M_REQUEST_URL_SAMPLE: '',
-          M_RESPONCE_URL_SAMPLE: '',
-          M_ACTIVE: true,
-        });
+        console.error('Error loading projects:', err);
+        alertify.error('Failed to load projects.');
       }
     });
   }
-
-  addmodule(): void {
-    this.norecords = false;
-    this.navbar = false;
-    this.addform = true;
-    this.methodform.reset({
-      M_MOD_ID: this.selectedModule.MOD_ID,
-      M_ACTIVE: true,
+ 
+  loadModules(): void {
+    this.authService.getModulesDataFromAPI().subscribe({
+      next: (data: any[]) => {
+        this.allModules = data;
+        this.activeModules = data.filter((module: any) => module.MOD_ACTIVE === "Y")
+        console.log('active modules :', this.activeModules);
+ 
+        if (this.selectedProjectId !== null) {
+          this.onProjectChange();
+        }
+      },
+      error: (err) => {
+        console.error('Error loading modules:', err);
+        alertify.error('Failed to load modules.');
+      }
     });
   }
-
+ 
+  loadMethods(): void {
+    this.authService.getMethodsDataFromAPI().subscribe({
+      next: (data: any[]) => {
+        console.log('Methods data', data);
+        this.methods = data;
+        this.filterMethods();
+      },
+      error: (err) => {
+        console.error('Error loading methods:', err);
+        alertify.error('Failed to load methods.');
+      }
+    });
+  }
+ 
+  onProjectChange(): void {
+    this.selectedModuleId = null;
+ 
+    const projectIdAsNumber = Number(this.selectedProjectId);
+ 
+    this.filteredModules = this.allModules.filter(mod =>
+      Number(mod.MOD_P_ID) === projectIdAsNumber
+    );
+ 
+    this.filterMethods();
+  }
+ 
+  onModuleChange(): void {
+    this.filterMethods();
+  }
+ 
+  filterMethods(): void {
+    console.log('--- filterMethods() called ---');
+    console.log('1. this.methods (all data fetched):', this.methods);
+    console.log('2. Current filter states:', {
+    selectedStatus: this.selectedStatus,
+    selectedProjectId: this.selectedProjectId,
+    selectedModuleId: this.selectedModuleId,
+    searchText: this.searchText
+  });
+    let filtered = this.methods;
+ 
+ 
+    if (this.selectedStatus === 'Y') {
+      filtered = filtered.filter(m => m.M_ACTIVE === 'Y');
+      this.Rlength = filtered.length,
+      console.log("Rlength Y :", this.Rlength);
+      this.grid = true;
+      this.del = false;
+    } 
+    else if (this.selectedStatus === 'N') {
+      filtered = filtered.filter(m => m.M_ACTIVE === 'N');
+      this.Rlength = filtered.length,
+      console.log("Rlength N :", this.Rlength);
+      this.grid = true;
+      this.del = false;
+    } 
+    else if (this.selectedStatus === 'D') {
+      filtered = filtered.filter(m => m.M_ACTIVE === 'D');
+      this.Rlength = filtered.length,
+      console.log("Rlength D :", this.Rlength);
+      this.grid = false;
+      this.del = true;
+    } 
+    else {
+      filtered = [...this.methods];
+      this.Rlength = filtered.length,
+      console.log("Rlength All :", this.Rlength);
+      this.grid = true;
+      this.del = false;
+    }
+ 
+   
+    if (this.selectedModuleId !== null) {
+      filtered = filtered.filter(m => Number(m.M_MOD_ID) === Number(this.selectedModuleId));
+    }
+    else if (this.selectedProjectId !== null) {
+      const moduleIds = this.filteredModules.map(mod => Number(mod.MOD_ID));
+      filtered = filtered.filter(m => moduleIds.includes(Number(m.M_MOD_ID)));
+    }
+ 
+    const term = this.searchText.toLowerCase();
+    if (term) {
+      filtered = filtered.filter(m => m.M_NAME.toLowerCase().includes(term));
+    }
+ 
+    this.filteredMethods = filtered;
+  }
+ 
+  popup(method: any) {
+    this.selectedmethod = method;
+    this.pop = true;
+  }
+ 
+  closePopup() {
+    this.pop = false;
+    this.selectedmethod = null;
+  }
+ 
+  deleteMethod(method: any) {
+    if (!confirm(`Are you sure you want to delete "${method.M_NAME}"?`)) return;
+    const payload = {
+      m: {
+        M_ID: method.M_ID,
+        action: 'D',
+      },
+    };
+    console.log('payload', payload)
+    this.authService.deleteMethod(payload).subscribe({
+      next: () => {
+        alertify.success("Method deleted successfully!");
+        this.loadMethods();
+      },
+      error: () => {
+        alertify.error('Failed to delete method.')
+      },
+    });
+  }
+ 
+  openAddMethodForm(): void {
+    this.navbar = false;
+    this.grid = false;
+    this.addform = true;
+    this.edit = false;
+    this.methodform.reset();
+  }
+ 
   addMethods() {
     if (this.methodform.invalid) {
       this.methodform.markAllAsTouched();
       alertify.error("Please fill all required fields");
       return;
     }
-
+ 
     const payload = {
       m: {
         M_ID: 0,
-        M_MOD_ID: this.selectedModule.MOD_ID,
+        M_MOD_ID: Number(this.methodform.value.M_MOD_ID),
         M_NAME: this.methodform.value.M_NAME,
         M_DESC: this.methodform.value.M_DESC,
         M_REQUEST_URL_SAMPLE: this.methodform.value.M_REQUEST_URL_SAMPLE,
         M_RESPONCE_URL_SAMPLE: this.methodform.value.M_RESPONCE_URL_SAMPLE,
         M_ACTIVE: this.methodform.value.M_ACTIVE ? 'Y' : 'N',
-        M_TYPE: 'G',
+        M_TS: new Date().toISOString(),
+        M_TYPE: "G",
         action: 'A',
       },
     };
-
-    this.auth.Getaddmethods(payload).subscribe({
+    console.log('add methods', payload);
+    this.authService.Getaddmethods(payload).subscribe({
       next: () => {
         alertify.success("Method added successfully!");
         this.addform = false;
-        this.getmethodsdata(this.selectedModule.MOD_ID);
+        this.loadMethods();
       },
       error: () => {
         alertify.error("Failed to add method.")
       },
     });
-    this.navbar=true;
+    this.navbar = true;
+    this.grid = true;
   }
-
+ 
   cancel() {
     this.addform = false;
-    this.norecords = this.modulesdata.length === 0;
     this.methodform.reset();
-    this.navbar=true;
+    this.navbar = true;
+    this.grid = true;
   }
-
-  popup(md: any) {
-    this.selectedmethod = md;
-    this.pop = true;
-  }
-
-  closePopup() {
-    this.pop = false;
-    this.selectedmethod = null;
-  }
-
+ 
   editMethod(md: any) {
-    this.navbar=false;
+    this.navbar = false;
     this.addform = true;
     this.edit = true;
+    this.grid = false;
     this.selectedmethod = md;
-
+ 
     this.methodform.patchValue({
-      M_MOD_ID: this.selectedModule.MOD_ID,
+      M_MOD_ID: md.M_MOD_ID,
       M_NAME: md.M_NAME,
       M_DESC: md.M_DESC,
       M_REQUEST_URL_SAMPLE: md.M_REQUEST_URL_SAMPLE,
@@ -184,18 +275,18 @@ export class MethodsComponent implements OnInit {
       M_ACTIVE: md.M_ACTIVE === 'Y',
     });
   }
-
+ 
   updateMethod() {
     if (this.methodform.invalid) {
       this.methodform.markAllAsTouched();
-      alertify.error('Please fill all required fields')
+      alertify.error('Please fill all required fields');
       return;
     }
-
+ 
     const payload = {
       m: {
         M_ID: this.selectedmethod.M_ID,
-        M_MOD_ID: this.selectedModule.MOD_ID,
+        M_MOD_ID: Number(this.methodform.value.M_MOD_ID),
         M_NAME: this.methodform.value.M_NAME,
         M_DESC: this.methodform.value.M_DESC,
         M_REQUEST_URL_SAMPLE: this.methodform.value.M_REQUEST_URL_SAMPLE,
@@ -205,37 +296,19 @@ export class MethodsComponent implements OnInit {
         M_TS: new Date().toISOString(),
       },
     };
-
-    this.auth.Getaddmethods(payload).subscribe({
+    console.log('edit payload :', payload);
+    this.authService.Getaddmethods(payload).subscribe({
       next: () => {
-        alertify.success('Method Updated Succesfully..!')
+        alertify.success('Method Updated Successfully..!');
+        this.loadMethods();
         this.addform = false;
-        this.getmethodsdata(this.selectedModule.MOD_ID);
       },
       error: () => {
-        alertify.success('Failed to update method.');
+        alertify.error('Failed to update method.');
       },
     });
-    this.navbar=true;
-  }
-
-  deleteMethod(method: any) {
-    if (!confirm(`Are you sure you want to delete "${method.M_NAME}"?`)) return;
-    const payload = {
-      m: {
-        M_ID: method.M_ID,
-        action: 'D',
-      },
-    };
-
-    this.auth.deleteMethod(payload).subscribe({
-      next: () => {
-        alertify.success("Method deleted successfully!");
-        this.getmethodsdata(this.selectedModule.MOD_ID);
-      },
-      error: () => {
-        alertify.error('Failed to delete method.')
-      },
-    });
+    this.navbar = true;
+    this.grid = true;
+    this.addform = false;
   }
 }

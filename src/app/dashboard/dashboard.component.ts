@@ -20,7 +20,8 @@ export class DashboardComponent {
   add: boolean = false;
   addEdit: boolean = false;
   navbar: boolean =true;
-  
+  del : boolean = false;
+  Rlength : any;
 
   searchTerm: string = '';
   selectedStatus: string = 'Y'; 
@@ -40,7 +41,7 @@ export class DashboardComponent {
     private router: Router,
   ) {
     this.myform = this.fb.group({
-      projectname: ['', [Validators.required, Validators.maxLength(10)]],
+      projectname: ['', [Validators.required, Validators.maxLength(15)]],
       devurl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
       stagingurl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
       produrl: ['',[Validators.required, Validators.pattern(this.urlPattern)]],
@@ -56,6 +57,10 @@ export class DashboardComponent {
   getprojects() {
     this.authServ.getdatafromAPI().subscribe(
       (response) => {
+        console.log('dashboard data', response);
+        console.log('length', response.length)
+        this.Rlength = Number(response.length);
+        console.log('Rlength', this.Rlength);
         this.allProjects = response;
         this.applyStatusFilter();
         this.editdata = false;
@@ -73,24 +78,45 @@ export class DashboardComponent {
     if (this.selectedStatus === 'All') {
       this.filteredProjects = this.allProjects.filter(project =>
         project.P_PRJ_NAME?.toLowerCase().includes(term),
-       
+        // this.Rlength = this.filteredProjects.length,        
+        
       );
-    } else if (this.selectedStatus === 'Y') {
+      this.Rlength = this.filteredProjects.length
+      console.log('dashboard ALL length', this.Rlength);
+      this.grid = true;
+       this.del =false;
+    } 
+    
+    else if (this.selectedStatus === 'Y') {
       this.filteredProjects = this.allProjects.filter(project =>
         (project.P_ACTIVE === 'Y' ) &&
-        project.P_PRJ_NAME?.toLowerCase().includes(term)
+        project.P_PRJ_NAME?.toLowerCase().includes(term),
+        
       );
-    } else if (this.selectedStatus === 'N') {
+      this.Rlength = this.filteredProjects.length,
+      console.log('dashboard Y length', this.Rlength);
+      this.grid = true;
+      this.del =false;
+    } 
+    else if (this.selectedStatus === 'N') {
       this.filteredProjects = this.allProjects.filter(project =>
         project.P_ACTIVE === 'N' &&
-        project.P_PRJ_NAME?.toLowerCase().includes(term)
+        project.P_PRJ_NAME?.toLowerCase().includes(term),
       );
+      this.Rlength = this.filteredProjects.length,
+      console.log('dashboard N length', this.Rlength);
+      this.grid = true;
+      this.del =false;
     }
     else if (this.selectedStatus === 'D') {
       this.filteredProjects = this.allProjects.filter(project =>
         project.P_ACTIVE === 'D' &&
-        project.P_PRJ_NAME?.toLowerCase().includes(term)
+        project.P_PRJ_NAME?.toLowerCase().includes(term),
       );
+      this.Rlength = this.filteredProjects.length,
+      console.log('dashboard D length', this.Rlength);
+      this.grid = false;
+       this.del =true;
     }
   }
 

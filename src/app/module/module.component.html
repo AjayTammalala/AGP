@@ -11,7 +11,7 @@
   </div>
 
   <div class="dropdown-left1">
-    <label for="projectFilter">Filter By projects:</label>
+    <label for="projectFilter">Filter By Projects:</label>
     <select name="" id="projectFilter" [(ngModel)]="projectFilter" (change)="applyFilters()">
       <option value="">Active Projects</option>
       <option [value]="project.P_ID" *ngFor="let project of activeProjects">{{project.P_PRJ_NAME}}</option>
@@ -27,11 +27,13 @@
   </div>
 </div>
 
+<p class="error" style="margin-left: 83%; margin-top: 1%;"> Total Records :{{Rlength}}</p>
+
 <div *ngIf="grid">
   <div class="cardslist">
     <div class="card" *ngFor="let m of filteredModules">
       <div class="c1">
-        <div class="c11">{{ m.MOD_NAME }}</div>
+        <div class="c11"><span>{{ m.MOD_NAME }}</span></div>
         <div class="c12">
           <img (click)="popup(m)" src="https://res.cloudinary.com/dlq6spyxk/image/upload/v1747135367/output-onlinepngtools_qu79fc.png" alt="view" height="25px">
           <img (click)="editModule(m)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387576/output-onlinepngtools_i6uyhd.png" alt="edit" height="25px">
@@ -41,9 +43,34 @@
       <div class="c2">
         <p>Description:<br><span> <a href="">{{ m.MOD_DESC }}</a></span></p>
       </div>
-      <div>
+
+      <!-- <div>
         <button class="getmodule"  (click)="getMethods(m)">Get Methods</button>
+      </div> -->
+
+    </div>
+  </div>
+</div>
+
+<div *ngIf="del">
+  <div class="cardslist">
+    <div class="card" *ngFor="let m of filteredModules">
+      <div class="c1">
+        <div class="c11"><span>{{ m.MOD_NAME }}</span></div>
+        <div class="c12">
+          <img (click)="popup(m)" src="https://res.cloudinary.com/dlq6spyxk/image/upload/v1747135367/output-onlinepngtools_qu79fc.png" alt="view" height="25px">
+          <img (click)="editModule(m)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387576/output-onlinepngtools_i6uyhd.png" alt="edit" height="25px">
+          <!-- <img (click)="deleteModule(m)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387963/966f969e-fa3f-4d9f-8e71-227b8c16c093.png" alt="delete" height="25px"> -->
+        </div>
       </div>
+      <div class="c2">
+        <p>Description:<br><span> <a href="">{{ m.MOD_DESC }}</a></span></p>
+      </div>
+
+      <!-- <div> 
+        <button class="getmodule"  (click)="getMethods(m)">Get Methods</button>
+      </div> -->
+
     </div>
   </div>
 </div>
@@ -64,9 +91,7 @@
 <div class="container" *ngIf="!grid && (add || edit)">
   <h3 *ngIf="add">Add Module</h3>
   <h3 *ngIf="edit">Edit Module</h3>
- 
   <form [formGroup]="moduleForm">
-
     <div class="project-dropdown" *ngIf="add">
       <label for="projectSelect" >Select Project</label>
       <select id="projectSelect" formControlName="MOD_P_ID" style="width: 100%; padding: 8px; border-radius: 5px;
@@ -81,7 +106,6 @@
   *Please select any Project
 </div>
 
-
     <label>Module Name</label>
     <input type="text" formControlName="MOD_NAME" />
     <div *ngIf="moduleForm.get('MOD_NAME')?.touched && moduleForm.get('MOD_NAME')?.invalid" class="error">
@@ -93,7 +117,6 @@
         </div>
     </div>
    
- 
     <label>Description</label>
     <input type="text" formControlName="MOD_DESC" />
     <div *ngIf="moduleForm.get('MOD_DESC')?.touched && moduleForm.get('MOD_DESC')?.invalid" class="error">

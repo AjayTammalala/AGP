@@ -1,124 +1,195 @@
-
-<div class="filter-container rowspacedbetween" *ngIf="navbar">
-  <div class="filter">
-    <label for="statusFilter">Filter by Status:</label>
-    <select id="statusFilter" (change)="onStatusFilterChange($event)">
-      <option value="all">All</option>
-      <option value="active">Active</option>
-      <option value="inactive">Inactive</option>
-      <option value="deleted">Deleted</option>
+<div class="navbar" *ngIf="navbar">
+  <div class="dropdown">
+    <label for="projectDropdown">Select Project:</label>
+    <select id="projectDropdown" [(ngModel)]="selectedProjectId" (change)="onProjectChange()">
+      <option [value]="null">-- Select Project --</option>
+      <option *ngFor="let project of activeProjects" [value]="project.P_ID">{{ project.P_PRJ_NAME }}</option>
     </select>
   </div>
-
-  <div class="searchinput">
-    <input type="text" [(ngModel)]="searchText" (input)="onSearchChange()" placeholder="Search Method Name">
+ 
+  <div class="dropdown">
+    <label for="moduleDropdown">Select Module:</label>
+    <select id="moduleDropdown" [(ngModel)]="selectedModuleId" (change)="onModuleChange()">
+      <option [value]="null">-- Select Module --</option>
+      <option *ngFor="let module of filteredModules" [value]="module.MOD_ID">{{ module.MOD_NAME }}</option>
+    </select>
   </div>
-
-  <div class="addmetbutton">
-    <button id="addmetbutton" (click)="addmodule()">Add Method</button>
+ 
+  <div class="status-filter">
+    <label for="status">Status:</label>
+    <select id="status" [(ngModel)]="selectedStatus" (change)="filterMethods()">
+      <option value="All">All</option>
+      <option value="Y">Active</option>
+      <option value="N">Inactive</option>
+      <option value="D">Deleted</option>
+    </select>
+  </div>
+ 
+  <div class="search-bar">
+    <input type="text" [(ngModel)]="searchText" (input)="filterMethods()" placeholder="Search Method">
+  </div>
+  <div class="navbaraddmet">
+      <button class="add-method" (click)="openAddMethodForm()">Add Method</button>
   </div>
 </div>
 
-<div *ngIf="!addform" class="cardslist">
-  <div class="card" *ngFor="let md of modulesdata">
-    <div class="c1">
-      <div class="c11">{{ md.M_NAME }}</div>
-      <div class="c12">
-        <img 
-          (click)="popup(md)" alt="view" height="25px"
-          src="https://res.cloudinary.com/dlq6spyxk/image/upload/v1747135367/output-onlinepngtools_qu79fc.png"
-        />
-        <img
-          (click)="editMethod(md)" alt="edit" height="25px"
-          src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387576/output-onlinepngtools_i6uyhd.png"
-        />
-        <img
-          (click)="deleteMethod(md)" alt="delete" height="25px"
-          src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387963/966f969e-fa3f-4d9f-8e71-227b8c16c093.png"
-        />
+<p class="error" style="margin-left: 87%; margin-top: 0%; margin-bottom: 0px;"> TotalRecords : {{Rlength}}</p>
+
+<div class="methods-content">
+  <div *ngIf="grid">
+    <div class="cardslist" *ngIf="filteredMethods.length > 0; else noMethods">
+      <div class="card" *ngFor="let method of filteredMethods">
+        <div class="c1">
+          <div class="c11"><span>{{ method.M_NAME }}</span></div>
+          <div class="c12">
+            <img (click)="popup(method)" src="https://res.cloudinary.com/dlq6spyxk/image/upload/v1747135367/output-onlinepngtools_qu79fc.png" alt="view" height="25px">
+            <img (click)="editMethod(method)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387576/output-onlinepngtools_i6uyhd.png" alt="edit" height="25px">
+            <img (click)="deleteMethod(method)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387963/966f969e-fa3f-4d9f-8e71-227b8c16c093.png" alt="delete" height="25px">
+          </div>
+        </div>
+        <div class="c2">
+          <p>Description:<br><span>{{ method.M_DESC }}</span></p>
+          <p><strong>Request URL:</strong> <span>{{ method.M_REQUEST_URL_SAMPLE }}</span></p>
+          <p><strong>Response URL:</strong> <span>{{ method.M_RESPONCE_URL_SAMPLE }}</span></p>
+        </div>
       </div>
+ 
+      <div class="popup" *ngIf="pop">
+        <div class="popup-content">
+          <h1 style="text-align: center;">Methods Details</h1>
+          <p><strong>Method:</strong> {{selectedmethod.M_NAME }}</p>
+          <p><strong>Description:</strong> {{ selectedmethod.M_DESC }}</p> <p><strong>Request URL:</strong> {{ selectedmethod.M_REQUEST_URL_SAMPLE }}</p>
+          <p><strong>Response URL:</strong> {{ selectedmethod.M_RESPONCE_URL_SAMPLE }}</p>
+          <div class="popupbtn"><button (click)="closePopup()">Close</button></div>
+        </div>
+      </div>
+ 
     </div>
-    <div class="c2">
-      <p>
-        Description:<br /><span>{{ md.M_DESC }}</span>
-      </p>
+    <ng-template #noMethods>
+      <div class="norecords">
+        <p>No methods found</p>
+      </div>
+    </ng-template>
+  </div>
+
+   <div *ngIf="del">
+    <div class="cardslist" *ngIf="filteredMethods.length > 0; else noMethods">
+      <div class="card" *ngFor="let method of filteredMethods">
+        <div class="c1">
+          <div class="c11"><span>{{ method.M_NAME }}</span></div>
+          <div class="c12">
+            <img (click)="popup(method)" src="https://res.cloudinary.com/dlq6spyxk/image/upload/v1747135367/output-onlinepngtools_qu79fc.png" alt="view" height="25px">
+            <img (click)="editMethod(method)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387576/output-onlinepngtools_i6uyhd.png" alt="edit" height="25px">
+            <!-- <img (click)="deleteMethod(method)" src="https://res.cloudinary.com/dizqxmrsk/image/upload/v1747387963/966f969e-fa3f-4d9f-8e71-227b8c16c093.png" alt="delete" height="25px"> -->
+          </div>
+        </div>
+        <div class="c2">
+          <p>Description:<br><span>{{ method.M_DESC }}</span></p>
+          <p><strong>Request URL:</strong> <span>{{ method.M_REQUEST_URL_SAMPLE }}</span></p>
+          <p><strong>Response URL:</strong> <span>{{ method.M_RESPONCE_URL_SAMPLE }}</span></p>
+        </div>
+      </div>
+ 
+      <div class="popup" *ngIf="pop">
+        <div class="popup-content">
+          <h1 style="text-align: center;">Methods Details</h1>
+          <p><strong>Method:</strong> {{selectedmethod.M_NAME }}</p>
+          <p><strong>Description:</strong> {{ selectedmethod.M_DESC }}</p> <p><strong>Request URL:</strong> {{ selectedmethod.M_REQUEST_URL_SAMPLE }}</p>
+          <p><strong>Response URL:</strong> {{ selectedmethod.M_RESPONCE_URL_SAMPLE }}</p>
+          <div class="popupbtn"><button (click)="closePopup()">Close</button></div>
+        </div>
+      </div>
+ 
     </div>
+    <ng-template #noMethods>
+      <div class="norecords">
+        <p>No methods found</p>
+      </div>
+    </ng-template>
   </div>
 </div>
-
-<div class="popup" *ngIf="pop">
-  <div class="popup-content">
-    <h1 style="text-align: center;">Methods Details</h1>
-    <p><strong>Method:</strong> {{selectedmethod.M_NAME }}</p>
-    <p><strong>Description:</strong> {{ selectedmethod.M_REQUEST_URL_SAMPLE }}</p>
-    <p>{{selectedmethod.M_RESPONCE_URL_SAMPLE}}</p>
-    <div class="popupbtn"><button (click)="closePopup()">Close</button></div>
-  </div>
-</div>
-
-<div class="error" *ngIf="norecords">
-  No Records Found
-</div>
-
+ 
 <div class="container" *ngIf="addform">
   <h3 *ngIf="edit">Edit Method</h3>
   <h3 *ngIf="!edit">Add Method</h3>
-
+ 
   <form [formGroup]="methodform">
-    <label>Module name</label>
-    <h3>{{ selectedModule?.MOD_NAME }} </h3>
-
+    <div class="project-dropdown" *ngIf="!edit">
+       <label for="projectSelect" >Select Project</label>
+      <select id="projectSelect" formControlName="" style="width: 100%;
+    padding: 8px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;">
+    <option value="" disabled selected>*Select any project from dropdown</option>      
+    <option *ngFor="let project of activeProjects" [value]="project.P_ID" (change)="onProjectChange()">
+          {{ project.P_PRJ_NAME }}
+        </option>
+      </select>
+    <!-- </div> -->
+      <label for="ModuleSelect">Select Module</label>
+      <select id="ModuleSelect" formControlName="M_MOD_ID" style="width: 100%;
+    padding: 8px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;">
+        <option value="">*Select any Module from dropdown</option>
+        <option *ngFor="let module of filteredModules" [value]="module.MOD_ID">
+          {{ module.MOD_NAME }}
+        </option>
+      </select>
+      <div *ngIf="methodform.get('M_MOD_ID')?.touched && methodform.get('M_MOD_ID')?.invalid" class="error">
+        *You must select a module
+      </div>
+    </div>
+ 
+ 
     <label>Method Name</label>
     <input type="text" formControlName="M_NAME" />
-    <div *ngIf="methodform.get('M_NAME')?.touched && methodform.get('M_NAME')?.invalid" class="errorr">
-        <div *ngIf="methodform.get('M_NAME')?.errors?. ['maxlength']" class="errorr">
+    <div *ngIf="methodform.get('M_NAME')?.touched && methodform.get('M_NAME')?.invalid" class="error">
+      <div *ngIf="methodform.get('M_NAME')?.errors?.['maxlength']" class="errorr">
         *Max length is exceeded
-        </div>
-          <div *ngIf="methodform.get('M_NAME')?.errors?.['required']">
-         *Method Name is Required
-        </div>
+      </div>
+      <div *ngIf="methodform.get('M_NAME')?.errors?.['required']">
+        *Method Name is Required
+      </div>
     </div>
-    
-
+ 
+ 
     <label>Description</label>
     <input type="text" formControlName="M_DESC" />
-     <div *ngIf="methodform.get('M_DESC')?.touched && methodform.get('M_DESC')?.invalid" class="errorr">
-        <div *ngIf="methodform.get('M_DESC')?.errors?. ['maxlength']" class="errorr">
+    <div *ngIf="methodform.get('M_DESC')?.touched && methodform.get('M_DESC')?.invalid" class="error">
+      <div *ngIf="methodform.get('M_DESC')?.errors?.['maxlength']">
         *Max length is exceeded
-        </div>
-          <div *ngIf="methodform.get('M_DESC')?.errors?.['required']">
-         *Method Description is Required
-        </div>
+      </div>
+      <div *ngIf="methodform.get('M_DESC')?.errors?.['required']">
+        *Method Description is Required
+      </div>
     </div>
-
+ 
     <label>Method Request URL</label>
     <input type="text" formControlName="M_REQUEST_URL_SAMPLE" />
-    <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.invalid && methodform.get('M_REQUEST_URL_SAMPLE')?.touched" class="errorr">
-      <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.errors?.['pattern']" class="errorr">
-        *Enter a valid URL (e.g., https://example.com)
+    <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.invalid && methodform.get('M_REQUEST_URL_SAMPLE')?.touched" class="error">
+      <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.errors?.['pattern']">
+        *Enter a valid URL (e.g., https://example.com or www.example.com)
       </div>
-      <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.errors?.['required']" class="errorr">
-         *Method URL is Required
+      <div *ngIf="methodform.get('M_REQUEST_URL_SAMPLE')?.errors?.['required']">
+        *Method URL is Required
       </div>
     </div>
-
+ 
     <label>Method Response URL</label>
     <input type="text" formControlName="M_RESPONCE_URL_SAMPLE" />
-    <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.invalid && methodform.get('M_RESPONCE_URL_SAMPLE')?.touched" class="errorr">
-      <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.errors?.['pattern']" class="errorr">
+    <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.invalid && methodform.get('M_RESPONCE_URL_SAMPLE')?.touched" class="error">
+      <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.errors?.['pattern']">
         *Enter a valid URL (e.g., https://example.com)
       </div>
-      <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.errors?.['required']" class="errorr">
-         *Method URL is Required
+      <div *ngIf="methodform.get('M_RESPONCE_URL_SAMPLE')?.errors?.['required']">
+        *Method URL is Required
       </div>
     </div>
-
+ 
     <label>Active</label>
     <input type="checkbox" formControlName="M_ACTIVE" />
-
+ 
     <button type="button" class="add-button" *ngIf="!edit" (click)="addMethods()">Add Method</button>
     <button type="button" class="add-button" *ngIf="edit" (click)="updateMethod()">Update Method</button>
     <button type="button" class="secondary" (click)="methodform.reset()">Reset</button>
     <button type="button" class="secondary" (click)="cancel()">Cancel</button>
   </form>
 </div>
+ 

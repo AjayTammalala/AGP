@@ -73,15 +73,15 @@ deleteModule(payload: any) {
 private methodApiUrl = 'http://spyhreagpapi.local.com/Service.svc/GetmethodInfo';
 private addMethodUrl = 'http://spyhreagpapi.local.com/Service.svc/AddMethods';
 private deleteMethodUrl = 'http://spyhreagpapi.local.com/Service.svc/DeleteMethod';
-private getMethodUrl = 'http://spyhreagpapi.local.com/Service.svc/GetApiMethods';
+// private getMethodUrl = 'http://spyhreagpapi.local.com/Service.svc/GetApiMethods';
 
 Getaddmethods(payload : any) : Observable<any>{
   return this.http.post(this.addMethodUrl, payload);
 }
 
-getMethodsfromURL(payload : any) :Observable<any> {
-  return this.http.post(this.getMethodUrl, payload);
-}
+// getMethodsfromURL(payload : any) :Observable<any> {
+//   return this.http.post(this.getMethodUrl, payload);
+// }
 getMethodsDataFromAPI() {
   return this.http.get<any[]>(this.methodApiUrl);
 }

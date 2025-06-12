@@ -79,7 +79,20 @@
 .c11 {
   padding: 10px;
   max-width: 60%;
+  width: 100%;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.c11 span {
+  display: inline-block;
+  transition: transform 5s linear;
+}
+
+.c11:hover span {
+  transform: translateX(-100%);
 }
 
 .c12 {
@@ -195,6 +208,6 @@ button:hover.secondary {
   color: red;
   font-size: 16px;
 }
-// .dashboardcomp{
-//   background-image: url();
-// }
+.action-bar{
+  margin-bottom: 0;
+}
