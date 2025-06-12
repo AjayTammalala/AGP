@@ -129,6 +129,7 @@ export class MethodsComponent implements OnInit {
     selectedModuleId: this.selectedModuleId,
     searchText: this.searchText
   });
+    this.currentPage = 1;
     let filtered = this.methods;
  
  
@@ -311,4 +312,23 @@ export class MethodsComponent implements OnInit {
     this.grid = true;
     this.addform = false;
   }
+
+    itemsPerPage: number = 8;
+
+currentPage: number = 1;
+
+get totalPages(): number {
+  return Math.ceil(this.filteredMethods.length / this.itemsPerPage);
+}
+
+get paginatedMethods() {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  return this.filteredMethods.slice(startIndex, endIndex);
+}
+
+get pageNumbers(): number[] {
+  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+}
+
 }

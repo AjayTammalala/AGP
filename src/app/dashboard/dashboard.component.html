@@ -22,10 +22,10 @@
   </div>
 </div>
 
-<p  style="margin-left: 89%; margin-bottom: 0px;">Total Records:{{Rlength}} </p>
+<p  style="margin-left: 89%; margin-bottom: 0px; padding-top: 2px; margin-top: 1px;">Total Records:{{Rlength}} </p>
 
   <div class="cardslist" *ngIf="grid">
-    <div class="card" *ngFor="let x of filteredProjects">
+    <div class="card" *ngFor="let x of paginatedProjects">
       <div class="c1">
         <div class="c11"><span> {{ x.P_PRJ_NAME }} </span></div>
         <div class="c12">
@@ -42,7 +42,7 @@
   </div>
 
   <div class="cardslist" *ngIf="del">
-    <div class="card" *ngFor="let x of filteredProjects">
+    <div class="card" *ngFor="let x of paginatedProjects">
       <div class="c1">
         <div class="c11"><span> {{ x.P_PRJ_NAME }} </span></div>
         <div class="c12">
@@ -151,3 +151,20 @@
       <button type="button" class="primary" (click)="cancel()">Cancel</button>
     </form>
   </div>
+
+  <div class="pagination-controls" *ngIf="filteredProjects.length > itemsPerPage">
+  <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
+    Previous
+  </button>
+
+  <button
+    *ngFor="let page of pageNumbers"
+    [class.active]="currentPage === page"
+    (click)="currentPage = page">
+    {{ page }}
+  </button>
+
+  <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
+    Next
+  </button>
+</div>

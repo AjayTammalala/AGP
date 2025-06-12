@@ -27,11 +27,11 @@
   </div>
 </div>
 
-<p class="error" style="margin-left: 83%; margin-top: 1%;"> Total Records :{{Rlength}}</p>
+<p  style="margin-left: 83%; margin-top: 1%;"> Total Records :{{Rlength}}</p>
 
 <div *ngIf="grid">
   <div class="cardslist">
-    <div class="card" *ngFor="let m of filteredModules">
+    <div class="card" *ngFor="let m of paginatedModules">
       <div class="c1">
         <div class="c11"><span>{{ m.MOD_NAME }}</span></div>
         <div class="c12">
@@ -54,7 +54,7 @@
 
 <div *ngIf="del">
   <div class="cardslist">
-    <div class="card" *ngFor="let m of filteredModules">
+    <div class="card" *ngFor="let m of paginatedModules">
       <div class="c1">
         <div class="c11"><span>{{ m.MOD_NAME }}</span></div>
         <div class="c12">
@@ -139,5 +139,23 @@
    
   </form>
 </div>
+
+  <div class="pagination-controls" *ngIf="filteredModules.length > itemsPerPage">
+  <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
+    Previous
+  </button>
+
+  <button
+    *ngFor="let page of pageNumbers"
+    [class.active]="currentPage === page"
+    (click)="currentPage = page">
+    {{ page }}
+  </button>
+
+  <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
+    Next
+  </button>
+</div>
+
  
  

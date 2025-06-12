@@ -73,6 +73,7 @@ export class DashboardComponent {
   }
 
   applyStatusFilter() {
+    this.currentPage = 1;
     const term = this.searchTerm.toLowerCase();
 
     if (this.selectedStatus === 'All') {
@@ -121,6 +122,7 @@ export class DashboardComponent {
   }
 
   filterProjects() {
+    this.currentPage = 1;
     this.applyStatusFilter();
   }
 
@@ -264,4 +266,23 @@ console.log(obj);
       });
     }
   }
+
+itemsPerPage: number = 8;
+
+currentPage: number = 1;
+
+get totalPages(): number {
+  return Math.ceil(this.filteredProjects.length / this.itemsPerPage);
+}
+
+get paginatedProjects() {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  return this.filteredProjects.slice(startIndex, endIndex);
+}
+
+get pageNumbers(): number[] {
+  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+}
+
 }

@@ -1,8 +1,8 @@
 .navbar {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 0px 20px;
+  // margin-bottom: 20px;
 }
 
 .navbar .dropdown, .navbar .status-filter, .navbar .search-bar {
@@ -35,10 +35,10 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  padding: 20px;
+  padding: 0px 20px 0px 20px;
   width: 100%;
   height: auto;
-  margin-top: 2%;
+  margin-top: 1%;
 }
 
 .card {
@@ -208,4 +208,49 @@ button.secondary {
   color: red;
   font-size: 16px;
 
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  width: 40%;
+  margin: auto;
+
+  button {
+    padding: 6px 6px;
+    border: none;
+    border-radius: 6px;
+    background-color: #ddd;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  button:hover {
+    background-color: #ccc;
+  }
+
+  button.active {
+    background-color: #3182ce;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  button:disabled {
+    background-color: #eee;
+    color: #999;
+    cursor: not-allowed;
+  }
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  z-index: 1;
+  position: relative;
 }

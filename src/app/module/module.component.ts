@@ -68,6 +68,7 @@ export class ModuleComponent
   }
  
   applyFilters() {
+    this.currentPage = 1;
     let filtered = this.modules;
  
     if (this.statusFilter === 'Active') {
@@ -274,5 +275,24 @@ export class ModuleComponent
       }
     });
   }
+
+  itemsPerPage: number = 8;
+
+currentPage: number = 1;
+
+get totalPages(): number {
+  return Math.ceil(this.filteredModules.length / this.itemsPerPage);
+}
+
+get paginatedModules() {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  return this.filteredModules.slice(startIndex, endIndex);
+}
+
+get pageNumbers(): number[] {
+  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+}
+
  
 }
