@@ -1,21 +1,21 @@
-.navbar {
+padding.navbar {
   display: flex;
   justify-content: space-between;
   padding: 0px 20px;
   // margin-bottom: 20px;
 }
-
+ 
 .navbar .dropdown, .navbar .status-filter, .navbar .search-bar {
   display: flex;
   align-items: center;
 }
-
+ 
 .navbar select, .navbar input {
   padding: 5px 10px;
   margin: 0 10px;
   font-size: 14px;
 }
-
+ 
 .add-method {
   padding: 7px 20px;
   background-color: #007bff;
@@ -26,11 +26,11 @@
   border-radius: 4px;
   margin-top: 2px;
 }
-
+ 
 .add-method:hover {
   background-color: #0056b3;
 }
-
+ 
 .cardslist {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -40,7 +40,7 @@
   height: auto;
   margin-top: 1%;
 }
-
+ 
 .card {
   background-color: white;
   border-radius: 8px;
@@ -49,7 +49,7 @@
   flex-direction: column;
   justify-content: space-between;
 }
-
+ 
 .c1 {
   font-weight: bold;
   font-size: 18px;
@@ -62,11 +62,11 @@
   justify-content: space-between;
   border-radius: 5px;
 }
-
+ 
 .c11 {
   padding: 10px;
 }
-
+ 
 .c11 {
   padding: 10px;
   max-width: 60%;
@@ -76,16 +76,16 @@
   text-overflow: ellipsis;
   cursor: pointer;
 }
-
+ 
 .c11 span {
   display: inline-block;
   transition: transform 5s linear;
 }
-
+ 
 .c11:hover span {
   transform: translateX(-100%);
 }
-
+ 
 .c12 {
   display: flex;
   gap: 20px;
@@ -93,15 +93,15 @@
   padding: 10px;
   cursor: pointer;
 }
-
+ 
 .c2 {
   padding: 10px;
 }
-
+ 
 .c2 p {
   font-size: 14px;
 }
-
+ 
 .getmodule {
   background-color: #007bff;
   color: white;
@@ -111,7 +111,7 @@
   cursor: pointer;
   margin-top: 10px;
 }
-
+ 
 .getmodule:hover {
   background-color: #0056b3;
 }
@@ -132,20 +132,20 @@
   align-items: center;
   justify-content: center;
 }
-
+ 
 .popup-content {
   background: white;
   padding: 30px;
   border-radius: 10px;
   min-width: 400px;
 }
-
+ 
 .popupbtn button {
   background-color: black;
   width: 100%;
   color: white;
 }
-
+ 
 .container {
   width: 40vw;
   margin: auto;
@@ -155,13 +155,13 @@
   font-family: Arial, sans-serif;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
+ 
 form label {
   font-weight: bold;
   display: block;
   margin-top: 10px;
 }
-
+ 
 form input[type="text"],
 form input[type="checkbox"] {
   width: 100%;
@@ -171,11 +171,11 @@ form input[type="checkbox"] {
   border: 1px solid #ccc;
   box-sizing: border-box;
 }
-
+ 
 form input[type="checkbox"] {
   width: auto;
 }
-
+ 
 button {
   padding: 10px;
   margin-top: 10px;
@@ -184,7 +184,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
-
+ 
 .add-button {
   background-color: #1976d2;
   color: white;
@@ -194,11 +194,11 @@ button {
 //   background-color: black;  color: white;
 //   width: 100%;
 // }
-
+ 
 .add-button:hover {
   background-color: #145ea8;
 }
-
+ 
 button.secondary {
   background-color: #f44336;
   color: white;
@@ -207,9 +207,9 @@ button.secondary {
 .error{
   color: red;
   font-size: 16px;
-
+ 
 }
-
+ 
 .pagination-controls {
   display: flex;
   justify-content: center;
@@ -217,7 +217,7 @@ button.secondary {
   gap: 6px;
   width: 40%;
   margin: auto;
-
+ 
   button {
     padding: 6px 6px;
     border: none;
@@ -227,30 +227,31 @@ button.secondary {
     cursor: pointer;
     transition: background-color 0.2s;
   }
-
+ 
   button:hover {
     background-color: #ccc;
   }
-
+ 
   button.active {
     background-color: #3182ce;
     color: #fff;
     font-weight: bold;
   }
-
+ 
   button:disabled {
     background-color: #eee;
     color: #999;
     cursor: not-allowed;
   }
 }
-
+ 
 .pagination-controls {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  padding: 10px 0;
+  padding: 0px 0px 10px 0px;
   z-index: 1;
   position: relative;
 }
+ 

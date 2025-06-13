@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 declare let alertify: any;
 
-
 @Component({
   selector: 'app-methods',
   standalone: false,
@@ -62,7 +61,6 @@ export class MethodsComponent implements OnInit {
         this.activeProjects = data.filter((project: any) => project.P_ACTIVE === 'Y');
         if (this.activeProjects.length > 0 && this.selectedProjectId === null) {
           this.selectedProjectId = this.activeProjects[0].P_ID;
-         
         }
       },
       error: (err) => {
@@ -106,13 +104,10 @@ export class MethodsComponent implements OnInit {
  
   onProjectChange(): void {
     this.selectedModuleId = null;
- 
     const projectIdAsNumber = Number(this.selectedProjectId);
- 
     this.filteredModules = this.allModules.filter(mod =>
       Number(mod.MOD_P_ID) === projectIdAsNumber
     );
- 
     this.filterMethods();
   }
  
@@ -131,29 +126,28 @@ export class MethodsComponent implements OnInit {
   });
     this.currentPage = 1;
     let filtered = this.methods;
- 
- 
+
     if (this.selectedStatus === 'Y') {
       filtered = filtered.filter(m => m.M_ACTIVE === 'Y');
       this.Rlength = filtered.length,
       console.log("Rlength Y :", this.Rlength);
       this.grid = true;
       this.del = false;
-    } 
+    }
     else if (this.selectedStatus === 'N') {
       filtered = filtered.filter(m => m.M_ACTIVE === 'N');
       this.Rlength = filtered.length,
       console.log("Rlength N :", this.Rlength);
       this.grid = true;
       this.del = false;
-    } 
+    }
     else if (this.selectedStatus === 'D') {
       filtered = filtered.filter(m => m.M_ACTIVE === 'D');
       this.Rlength = filtered.length,
       console.log("Rlength D :", this.Rlength);
       this.grid = false;
       this.del = true;
-    } 
+    }
     else {
       filtered = [...this.methods];
       this.Rlength = filtered.length,
@@ -175,8 +169,9 @@ export class MethodsComponent implements OnInit {
     if (term) {
       filtered = filtered.filter(m => m.M_NAME.toLowerCase().includes(term));
     }
- 
     this.filteredMethods = filtered;
+    this.Rlength = filtered.length;
+    this.currentPage = 1;
   }
  
   popup(method: any) {
@@ -312,23 +307,26 @@ export class MethodsComponent implements OnInit {
     this.grid = true;
     this.addform = false;
   }
-
+ 
     itemsPerPage: number = 8;
-
+ 
 currentPage: number = 1;
-
+ 
 get totalPages(): number {
   return Math.ceil(this.filteredMethods.length / this.itemsPerPage);
 }
-
+ 
 get paginatedMethods() {
   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
   const endIndex = startIndex + this.itemsPerPage;
   return this.filteredMethods.slice(startIndex, endIndex);
 }
-
+ 
 get pageNumbers(): number[] {
   return Array.from({ length: this.totalPages }, (_, i) => i + 1);
 }
 
+
+
+ 
 }

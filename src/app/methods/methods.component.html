@@ -32,9 +32,9 @@
       <button class="add-method" (click)="openAddMethodForm()">Add Method</button>
   </div>
 </div>
-
+ 
 <p style="margin-left: 87%; margin-top: 1%; margin-bottom: 0px;"> TotalRecords : {{Rlength}}</p>
-
+ 
 <div class="methods-content">
   <div *ngIf="grid">
     <div class="cardslist" *ngIf="filteredMethods.length > 0; else noMethods">
@@ -71,7 +71,7 @@
       </div>
     </ng-template>
   </div>
-
+ 
    <div *ngIf="del">
     <div class="cardslist" *ngIf="filteredMethods.length > 0; else noMethods">
       <div class="card" *ngFor="let method of paginatedMethods">
@@ -197,15 +197,17 @@
   <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
     Previous
   </button>
-
+ 
   <button
     *ngFor="let page of pageNumbers"
     [class.active]="currentPage === page"
     (click)="currentPage = page">
     {{ page }}
   </button>
-
+ 
   <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
     Next
   </button>
 </div>
+ 
+ 
