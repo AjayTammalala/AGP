@@ -32,6 +32,7 @@ export class MethodsComponent implements OnInit {
   add: boolean = false;
   del : boolean = false;
   Rlength : any;
+  record : boolean = true;
   urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?$/;
   urlPattern1 = /^(https?:\/\/|www\.)[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:/~+#]*[\w\-@?^=%&/~+#])?$/;
  
@@ -209,6 +210,7 @@ export class MethodsComponent implements OnInit {
     this.grid = false;
     this.addform = true;
     this.edit = false;
+    this.record =false;
     this.methodform.reset();
   }
  
@@ -246,6 +248,7 @@ export class MethodsComponent implements OnInit {
     });
     this.navbar = true;
     this.grid = true;
+    this.record = true;
   }
  
   cancel() {
@@ -253,6 +256,8 @@ export class MethodsComponent implements OnInit {
     this.methodform.reset();
     this.navbar = true;
     this.grid = true;
+    this.record = true;
+
   }
  
   editMethod(md: any) {
@@ -260,6 +265,7 @@ export class MethodsComponent implements OnInit {
     this.addform = true;
     this.edit = true;
     this.grid = false;
+    this.record = false;
     this.selectedmethod = md;
  
     this.methodform.patchValue({
@@ -306,10 +312,9 @@ export class MethodsComponent implements OnInit {
     this.navbar = true;
     this.grid = true;
     this.addform = false;
+    this.record = true;
   }
- 
-    itemsPerPage: number = 8;
- 
+itemsPerPage: number = 8;
 currentPage: number = 1;
  
 get totalPages(): number {
@@ -325,8 +330,5 @@ get paginatedMethods() {
 get pageNumbers(): number[] {
   return Array.from({ length: this.totalPages }, (_, i) => i + 1);
 }
-
-
-
  
 }
